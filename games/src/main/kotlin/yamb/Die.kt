@@ -1,4 +1,4 @@
-package Yamb
+package yamb
 
 import kotlin.random.Random
 

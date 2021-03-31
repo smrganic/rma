@@ -1,10 +1,10 @@
 import BlackJack.BlackJack
-import Yamb.Yamb
+import yamb.Yamb
 import kotlin.system.exitProcess
 
 fun main() {
     
-    var userSelection: String?
+    var userSelection: String
     while (true) {
 
         println("Pick your game!")
@@ -12,11 +12,11 @@ fun main() {
         println("2 - Blackjack")
         println("3 - Exit program")
         
-        userSelection = readLine()
+        userSelection = readLine() ?: ""
 
         when (userSelection) {
             "1" -> {
-                Yamb.runGame()
+                Yamb.runGame(2)
             }
             "2" -> {
                 BlackJack.runGame()
