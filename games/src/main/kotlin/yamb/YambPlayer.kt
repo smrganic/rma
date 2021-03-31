@@ -3,48 +3,60 @@ package yamb
 class YambPlayer(playerNumber: Int, numberOfFields: Int) {
 
     private var rollCounter: Int = 0
-    private val playersResults = HashMap<String, Int>(numberOfFields)
-    private lateinit var playerInput: String
+    private val table = YambTable(playerNumber, numberOfFields)
 
-    init {
-        // Consider implementing a builder
-        playersResults["Player Number"] = playerNumber
-        playersResults["Total"] = 0
-        playersResults["Poker"] = 0
-        playersResults["Yamb"] = 0
-        playersResults["Full House"] = 0
-    }
+    private lateinit var playerInput: String
 
     fun takeTurn() {
         DiceManager.resetDice()
-        println("Player ${playersResults["Player Number"]} turn!")
+        println("Player ${table.getPlayerNumber()} turn!")
         rollCounter = 0
         while (rollCounter < 3) {
             playRoll()
             rollCounter++
         }
+        updateScore()
+    }
 
+    private fun updateScore() {
+        DiceManager.printDiceValues()
+
+        println("What table field do you want to populate?")
+        var flag = true
+        lateinit var keys: MutableList<String>
+        while (flag) {
+            println("Available options are: ")
+            table.listAvailableOptions()
+
+            playerInput = readLine() ?: ""
+            keys = InputParser.parseTable(playerInput)
+            if(table.updateScore(keys, DiceManager.getDiceValues()))
+                flag = false
+        }
     }
 
     private fun playRoll() {
 
         DiceManager.rollDice()
+        if (rollCounter == 2) return
         DiceManager.printDiceValues()
 
         println("Roll counter: ${rollCounter + 1}")
         println("Select the dice you wish to lock. (Comma separated).")
 
         playerInput = readLine() ?: ""
-        DiceManager.lockDice(InputParser.parse(playerInput))
+        DiceManager.lockDice(InputParser.parseDiceValues(playerInput))
 
         println("Select the dice you wish to unlock. (Comma separated).")
         playerInput = readLine() ?: ""
-        DiceManager.unlockDice(InputParser.parse(playerInput))
+        DiceManager.unlockDice(InputParser.parseDiceValues(playerInput))
     }
 
     override fun toString(): String {
-        return playersResults["Player Number"].toString() + "Score: " + playersResults["Total"].toString()
+        return "${table.getPlayerNumber()}" +
+                "Score: " +
+                "${table.getScore()}"
     }
 
-    fun getScore() = playersResults["Total"] ?: -1
+    fun getScore() = table.getScore()
 }

@@ -4,7 +4,7 @@ object Yamb {
 
 
     private var loopCounter: Int = 0
-    private const val numberOfFields: Int = 4 * 12
+    private const val numberOfFields: Int = 12
 
     private val players = mutableListOf<YambPlayer>()
 
@@ -32,7 +32,7 @@ object Yamb {
         var maxHighScore = 0
         var currentPlayerScore: Int
         var winnerIndex = 0
-        for (player in players) {
+        for (player: YambPlayer in players) {
             currentPlayerScore = player.getScore()
             if (maxHighScore < currentPlayerScore) {
                 maxHighScore = currentPlayerScore
