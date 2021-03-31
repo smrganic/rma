@@ -3,7 +3,7 @@ import yamb.Yamb
 import kotlin.system.exitProcess
 
 fun main() {
-    
+
     var userSelection: String
     while (true) {
 
@@ -11,7 +11,7 @@ fun main() {
         println("1 - Yamb")
         println("2 - Blackjack")
         println("3 - Exit program")
-        
+
         userSelection = readLine() ?: ""
 
         when (userSelection) {

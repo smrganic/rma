@@ -5,43 +5,46 @@ class YambPlayer(playerNumber: Int, numberOfFields: Int) {
     private var rollCounter: Int = 0
     private val playersResults = HashMap<String, Int>(numberOfFields)
     private lateinit var playerInput: String
-    private var choices: MutableSet<String> = mutableSetOf()
 
     init {
+        // Consider implementing a builder
         playersResults["Player Number"] = playerNumber
         playersResults["Total"] = 0
+        playersResults["Poker"] = 0
+        playersResults["Yamb"] = 0
+        playersResults["Full House"] = 0
     }
 
-    fun takeTurn(dice: List<Die>) {
+    fun takeTurn() {
+        DiceManager.resetDice()
+        println("Player ${playersResults["Player Number"]} turn!")
         rollCounter = 0
-        while(rollCounter < 3){
-            dice.forEach { Die -> Die.roll() }
-            printDice(dice)
-            getInputs()
+        while (rollCounter < 3) {
+            playRoll()
             rollCounter++
         }
+        
     }
 
-    private fun printDice(dice: List<Die>) {
-        print("Your Roll is: ")
-        dice.forEach { Die -> print(Die.state.toString() + " ") }
-        println()
-    }
+    private fun playRoll() {
 
-    private fun getInputs() {
-        println("Select the dice you wish to keep. (Comma separated).")
+        DiceManager.rollDice()
+        DiceManager.printDiceValues()
+
+        println("Roll counter: ${rollCounter + 1}")
+        println("Select the dice you wish to lock. (Comma separated).")
+
         playerInput = readLine() ?: ""
-        if (playerInput != ""){
-            choices.addAll(playerInput.split(",", " ").filter { it != "" })
-            choices.forEach { println(it) }
-        }
+        DiceManager.lockDice(InputParser.parse(playerInput))
+
+        println("Select the dice you wish to unlock. (Comma separated).")
+        playerInput = readLine() ?: ""
+        DiceManager.unlockDice(InputParser.parse(playerInput))
     }
 
     override fun toString(): String {
         return playersResults["Player Number"].toString() + "Score: " + playersResults["Total"].toString()
     }
 
-    fun getScore(): Int {
-        return playersResults["Total"] ?: -1
-    }
+    fun getScore() = playersResults["Total"] ?: -1
 }

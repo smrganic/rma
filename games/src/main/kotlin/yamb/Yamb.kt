@@ -1,7 +1,7 @@
 package yamb
 
 object Yamb {
-    private val diceToRoll = listOf(Die(), Die(), Die(), Die(), Die(), Die())
+
 
     private var loopCounter: Int = 0
     private const val numberOfFields: Int = 4 * 12
@@ -14,7 +14,7 @@ object Yamb {
 
         while (loopCounter <= numberOfFields * numberOfPlayers) {
             for (player in players) {
-                player.takeTurn(diceToRoll)
+                player.takeTurn()
             }
             loopCounter++
         }
