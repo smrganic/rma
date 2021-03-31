@@ -23,7 +23,7 @@ class YambPlayer(playerNumber: Int, numberOfFields: Int) {
             playRoll()
             rollCounter++
         }
-        
+
     }
 
     private fun playRoll() {
