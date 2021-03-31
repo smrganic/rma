@@ -1,10 +1,6 @@
 package yamb
 
 object Yamb {
-
-
-
-
     private val diceToRoll = listOf(Die(), Die(), Die(), Die(), Die(), Die())
 
     private var loopCounter: Int = 0
@@ -16,14 +12,14 @@ object Yamb {
 
         generatePlayers(numberOfPlayers)
 
-        while(loopCounter <= numberOfFields * numberOfPlayers){
-            for(player in players) {
+        while (loopCounter <= numberOfFields * numberOfPlayers) {
+            for (player in players) {
                 player.takeTurn(diceToRoll)
             }
             loopCounter++
         }
 
-        calculateWinner()
+        declareWinner()
     }
 
     private fun generatePlayers(numberOfPlayers: Int) {
@@ -32,9 +28,17 @@ object Yamb {
         }
     }
 
-    private fun calculateWinner() {
-        TODO("Not yet implemented")
+    private fun declareWinner() {
+        var maxHighScore = 0
+        var currentPlayerScore: Int
+        var winnerIndex = 0
+        for (player in players) {
+            currentPlayerScore = player.getScore()
+            if (maxHighScore < currentPlayerScore) {
+                maxHighScore = currentPlayerScore
+                winnerIndex = players.indexOf(player)
+            }
+        }
+        println("The winner is: " + players[winnerIndex].toString())
     }
-
-
 }

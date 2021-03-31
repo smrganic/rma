@@ -16,6 +16,7 @@ fun main() {
 
         when (userSelection) {
             "1" -> {
+                // Should generate input for numberOfPlayers
                 Yamb.runGame(2)
             }
             "2" -> {

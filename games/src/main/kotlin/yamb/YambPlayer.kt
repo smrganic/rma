@@ -9,6 +9,7 @@ class YambPlayer(playerNumber: Int, numberOfFields: Int) {
 
     init {
         playersResults["Player Number"] = playerNumber
+        playersResults["Total"] = 0
     }
 
     fun takeTurn(dice: List<Die>) {
@@ -34,6 +35,13 @@ class YambPlayer(playerNumber: Int, numberOfFields: Int) {
             choices.addAll(playerInput.split(",", " ").filter { it != "" })
             choices.forEach { println(it) }
         }
+    }
 
+    override fun toString(): String {
+        return playersResults["Player Number"].toString() + "Score: " + playersResults["Total"].toString()
+    }
+
+    fun getScore(): Int {
+        return playersResults["Total"] ?: -1
     }
 }
