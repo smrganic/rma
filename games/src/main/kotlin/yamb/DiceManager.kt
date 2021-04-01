@@ -32,7 +32,7 @@ object DiceManager {
 
     fun getDiceValues(): List<String> {
         val outList = mutableListOf<String>()
-        dice.forEach{die -> outList.add(die.value.toString()) }
+        dice.forEach { die -> outList.add(die.value.toString()) }
         return outList
     }
 }

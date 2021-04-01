@@ -12,7 +12,7 @@ object InputParser {
     fun parseBlackJack(playerInput: String): Int {
         parsedInput.clear()
         parsedInput.addAll(playerInput.split(",", " ").filter { it != "" })
-        if(parsedInput.isEmpty()) return -1
+        if (parsedInput.isEmpty()) return -1
         return parsedInput.elementAt(0).toInt()
     }
 }

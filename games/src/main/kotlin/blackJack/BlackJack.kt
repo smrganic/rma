@@ -6,6 +6,7 @@ object BlackJack {
     fun runGame(numberOfPlayers: Int) {
         players.clear()
         generatePlayers(numberOfPlayers)
+        // Could implement fund subtraction and betting mechanics but not today
         for (player: BlackJackPlayer in players) {
             player.takeTurn()
         }

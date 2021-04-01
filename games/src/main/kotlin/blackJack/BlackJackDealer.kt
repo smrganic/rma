@@ -14,7 +14,7 @@ object BlackJackDealer : BlackJackPlayer(0, Float.POSITIVE_INFINITY) {
             hand.add(CardGenerator.getCard())
             printCards()
             playerHandSum = hand.sumBy { it }
-            if(hand.contains(11) && playerHandSum > 21){
+            if (hand.contains(11) && playerHandSum > 21) {
                 hand.remove(11)
                 hand.add(1)
                 playerHandSum = hand.sumBy { it }
