@@ -1,5 +1,7 @@
 package yamb
 
+import utils.InputParser
+
 class YambPlayer(playerNumber: Int, numberOfFields: Int) {
 
     private var rollCounter: Int = 0
@@ -23,7 +25,7 @@ class YambPlayer(playerNumber: Int, numberOfFields: Int) {
         while (flag) {
             table.listAvailableOptions()
             playerInput = readLine() ?: ""
-            val keys = InputParser.parse(playerInput)
+            val keys = InputParser.parseDice(playerInput)
             if (table.updateScore(keys, DiceManager.getDiceValues()))
                 flag = false
         }
@@ -39,11 +41,11 @@ class YambPlayer(playerNumber: Int, numberOfFields: Int) {
         println("Select the dice you wish to lock. (Comma separated).")
 
         playerInput = readLine() ?: ""
-        DiceManager.lockDice(InputParser.parse(playerInput))
+        DiceManager.lockDice(InputParser.parseDice(playerInput))
 
         println("Select the dice you wish to unlock. (Comma separated).")
         playerInput = readLine() ?: ""
-        DiceManager.unlockDice(InputParser.parse(playerInput))
+        DiceManager.unlockDice(InputParser.parseDice(playerInput))
     }
 
     override fun toString(): String {

@@ -3,15 +3,13 @@ package blackJack
 object BlackJack {
     private val players = mutableListOf<BlackJackPlayer>()
 
-    // This should be adjusted so it doesn't generate infinite funds
-    private val dealer = BlackJackPlayer(0, Float.POSITIVE_INFINITY)
-
     fun runGame(numberOfPlayers: Int) {
+        players.clear()
         generatePlayers(numberOfPlayers)
         for (player: BlackJackPlayer in players) {
             player.takeTurn()
-            dealer.takeTurn()
         }
+        BlackJackDealer.takeTurn()
         declareWinner()
     }
 
@@ -23,11 +21,13 @@ object BlackJack {
 
     private fun declareWinner() {
         var playerHandValue = 0
-        val dealerHandValue = dealer.getHand()
+        val dealerHandValue = BlackJackDealer.getHand()
+        println("Dealer Hand is: $dealerHandValue.")
         players.forEach {
             playerHandValue = it.getHand()
             when {
                 playerHandValue > 21 -> println("Player: ${it.playerNumber} lost.")
+                it.blackJackAchieved -> println("Player: ${it.playerNumber} won.")
                 playerHandValue == 21 && dealerHandValue == 21 -> println("Player: ${it.playerNumber} lost.")
                 playerHandValue in (dealerHandValue + 1)..21 -> {
                     println("Player: ${it.playerNumber} won.")

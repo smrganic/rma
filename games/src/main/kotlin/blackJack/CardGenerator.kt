@@ -2,8 +2,8 @@ package blackJack
 
 import kotlin.random.Random
 
-class CardGenerator {
+object CardGenerator {
     fun getCard(): Int {
-        return Random.nextInt(1, 11)
+        return Random.nextInt(1, 12)
     }
 }

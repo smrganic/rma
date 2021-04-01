@@ -16,11 +16,11 @@ fun main() {
 
         when (userSelection) {
             "1" -> {
-                // Should generate input for numberOfPlayers
+                // Should generate user input for numberOfPlayers
                 Yamb.runGame(2)
             }
             "2" -> {
-                BlackJack.runGame()
+                BlackJack.runGame(2)
             }
             "3" -> {
                 exitProcess(3)
