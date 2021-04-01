@@ -9,7 +9,7 @@ class YambPlayer(playerNumber: Int, numberOfFields: Int) {
 
     fun takeTurn() {
         DiceManager.resetDice()
-        println("Player ${table.getPlayerNumber()} turn!")
+        println("Player ${table.playerNumber} turn!")
         rollCounter = 0
         while (rollCounter < 3) {
             playRoll()
@@ -19,12 +19,11 @@ class YambPlayer(playerNumber: Int, numberOfFields: Int) {
     }
 
     private fun updateScore() {
-        DiceManager.printDiceValues()
         var flag = true
         while (flag) {
             table.listAvailableOptions()
             playerInput = readLine() ?: ""
-            val keys = InputParser.parseTable(playerInput)
+            val keys = InputParser.parse(playerInput)
             if (table.updateScore(keys, DiceManager.getDiceValues()))
                 flag = false
         }
@@ -33,22 +32,22 @@ class YambPlayer(playerNumber: Int, numberOfFields: Int) {
     private fun playRoll() {
 
         DiceManager.rollDice()
-        if (rollCounter == 2) return
         DiceManager.printDiceValues()
+        if (rollCounter == 2) return
 
         println("Roll counter: ${rollCounter + 1}")
         println("Select the dice you wish to lock. (Comma separated).")
 
         playerInput = readLine() ?: ""
-        DiceManager.lockDice(InputParser.parseDiceValues(playerInput))
+        DiceManager.lockDice(InputParser.parse(playerInput))
 
         println("Select the dice you wish to unlock. (Comma separated).")
         playerInput = readLine() ?: ""
-        DiceManager.unlockDice(InputParser.parseDiceValues(playerInput))
+        DiceManager.unlockDice(InputParser.parse(playerInput))
     }
 
     override fun toString(): String {
-        return "${table.getPlayerNumber()}" +
+        return "${table.playerNumber}" +
                 "Score: " +
                 "${table.getScore()}"
     }

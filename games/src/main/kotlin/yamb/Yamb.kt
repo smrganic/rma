@@ -1,10 +1,9 @@
 package yamb
 
 object Yamb {
-
-
-    private var loopCounter: Int = 0
-    private const val numberOfFields: Int = 12
+    private var loopCounter = 0
+    private const val numberOfFields = 12
+    private const val numberOfColumns = 4
 
     private val players = mutableListOf<YambPlayer>()
 
@@ -12,7 +11,7 @@ object Yamb {
 
         generatePlayers(numberOfPlayers)
 
-        while (loopCounter <= numberOfFields * numberOfPlayers) {
+        while (loopCounter <= numberOfFields * numberOfPlayers * numberOfColumns) {
             for (player in players) {
                 player.takeTurn()
             }

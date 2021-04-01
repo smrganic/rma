@@ -1,10 +1,10 @@
 package yamb
 
-class YambTable(playerNumber: Int, numberOfFields: Int) {
+data class YambTable(val playerNumber: Int, val numberOfFields: Int) {
     private val playerResults = HashMap<String, HashMap<String, Int>>()
 
     init {
-        
+
         // Consider implementing a builder but not today
         // All matchers should be uppercase
 
@@ -52,8 +52,6 @@ class YambTable(playerNumber: Int, numberOfFields: Int) {
         return map
     }
 
-    fun getPlayerNumber(): Int = playerResults["PlayerInfo"]?.get("PlayerNumber") ?: -1
-
     fun listAvailableOptions() {
         println("What table field do you want to populate?")
         println("Available options are: ")
@@ -62,7 +60,7 @@ class YambTable(playerNumber: Int, numberOfFields: Int) {
             if (it.key != "PlayerInfo") {
                 println("For ${it.key}")
                 it.value.forEach { (key, value) ->
-                    if (value != -1) println(key)
+                    if (value < 0 && value != -1) println(key)
                 }
                 println()
             }
@@ -73,6 +71,7 @@ class YambTable(playerNumber: Int, numberOfFields: Int) {
 
     fun updateScore(keys: MutableList<String>, diceValues: List<String>): Boolean {
         var counter = 0
+        if (keys.isEmpty()) return false
         val map: HashMap<String, Int> = playerResults[keys[0]] ?: return false
         when (keys[0]) {
             "Downward" -> {
@@ -80,16 +79,19 @@ class YambTable(playerNumber: Int, numberOfFields: Int) {
                     "Ones" -> {
                         diceValues.forEach { if (it == "1") counter++ }
                         map["Ones"] = counter
+                        map["Twos"] = -2
                         return true
                     }
                     "Twos" -> {
                         diceValues.forEach { if (it == "2") counter++ }
                         map["Twos"] = counter * 2
+                        map["Threes"] = -2
                         return true
                     }
                     "Threes" -> {
                         diceValues.forEach { if (it == "3") counter++ }
                         map["Threes"] = counter * 3
+                        map["Fours"] = -2
                         return true
                     }
                     "Scale" -> {
