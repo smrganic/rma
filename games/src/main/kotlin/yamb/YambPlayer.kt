@@ -20,17 +20,12 @@ class YambPlayer(playerNumber: Int, numberOfFields: Int) {
 
     private fun updateScore() {
         DiceManager.printDiceValues()
-
-        println("What table field do you want to populate?")
         var flag = true
-        lateinit var keys: MutableList<String>
         while (flag) {
-            println("Available options are: ")
             table.listAvailableOptions()
-
             playerInput = readLine() ?: ""
-            keys = InputParser.parseTable(playerInput)
-            if(table.updateScore(keys, DiceManager.getDiceValues()))
+            val keys = InputParser.parseTable(playerInput)
+            if (table.updateScore(keys, DiceManager.getDiceValues()))
                 flag = false
         }
     }
