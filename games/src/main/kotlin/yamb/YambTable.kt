@@ -95,22 +95,27 @@ data class YambTable(val playerNumber: Int, val numberOfFields: Int) {
                         return true
                     }
                     "Scale" -> {
-                        when (diceValues.distinct().size) {
+                        return when (diceValues.distinct().size) {
                             5 -> {
                                 map["Scale"] = 35
-                                return true
+                                true
                             }
                             6 -> {
                                 map["Scale"] = 45
-                                return true
+                                true
+                            }
+                            else -> {
+                                map["Scale"] = 0; true
                             }
                         }
                     }
-                    "Max" ->{
+                    "Max" -> {
                         map["Max"] = diceValues.sumBy { it.toInt() }
+                        return true
                     }
-                    "Min" ->{
+                    "Min" -> {
                         map["Min"] = diceValues.sumBy { it.toInt() }
+                        return true
                     }
                 }
             }

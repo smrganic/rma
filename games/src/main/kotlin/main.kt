@@ -1,4 +1,4 @@
-import BlackJack.BlackJack
+import blackJack.BlackJack
 import yamb.Yamb
 import kotlin.system.exitProcess
 
