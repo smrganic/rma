@@ -4,12 +4,12 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.lv2.R
-import com.example.lv2.listeners.onSelectedPersonListener
+import com.example.lv2.listeners.OnSelectedPersonListener
 import com.example.lv2.model.Person
 
 class PersonAdapter(
     people: List<Person>,
-    private val listener: onSelectedPersonListener
+    private val listener: OnSelectedPersonListener
 )
     : RecyclerView.Adapter<PersonViewHolder>() {
 

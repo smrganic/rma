@@ -1,5 +1,6 @@
 package com.example.lv2.fragments
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,11 +9,11 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.lv2.data.PeopleRepository
 import com.example.lv2.databinding.FragmentRecyclerPersonListBinding
-import com.example.lv2.listeners.onSelectedPersonListener
+import com.example.lv2.listeners.OnSelectedPersonListener
 import com.example.lv2.recycler.PersonAdapter
 
 class PeopleListFragment : Fragment() {
-    private lateinit var onSelectedPersonListener: onSelectedPersonListener
+    private lateinit var onSelectedPersonListener: OnSelectedPersonListener
     private lateinit var peopleListBinding: FragmentRecyclerPersonListBinding
     private val peopleRepository = PeopleRepository
 
@@ -20,10 +21,17 @@ class PeopleListFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         peopleListBinding = FragmentRecyclerPersonListBinding.inflate(inflater, container, false)
         setupRecycler()
         return peopleListBinding.root
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if(context is OnSelectedPersonListener){
+            onSelectedPersonListener = context
+        }
     }
 
     private fun setupRecycler() {
@@ -35,5 +43,9 @@ class PeopleListFragment : Fragment() {
         peopleListBinding
             .rvPeople
             .adapter = PersonAdapter(peopleRepository.getPeople(), onSelectedPersonListener)
+    }
+
+    companion object {
+        const val TAG = "People List Fragment"
     }
 }
