@@ -14,6 +14,7 @@ class PersonViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         itemBinding.tvRecyclerItemName.text = person.name
         itemBinding.tvRecyclerItemBDay.text = person.dateOfBirth
         itemBinding.tvRecyclerItemQuote.text = person.quote
+        itemBinding.tvRecyclerItemDescription.text = person.description
         Glide.with(itemView.context)
             .load(person.imageLink)
             .into(itemBinding.ivRecyclerItemProfile)
