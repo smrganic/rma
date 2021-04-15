@@ -9,6 +9,7 @@ import com.example.lv2.listeners.OnSelectedPersonListener
 import com.example.lv2.model.Person
 
 class MainActivity : AppCompatActivity(), OnSelectedPersonListener {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)

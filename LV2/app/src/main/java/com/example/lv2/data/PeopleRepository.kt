@@ -36,5 +36,9 @@ object PeopleRepository {
 
     fun getPeople(): List<Person> = people
     fun insertPerson(person: Person) = people.add(person)
+    fun editPerson(person: Person, editedPerson: Person) {
+        people.add(people.indexOf(person), editedPerson)
+        people.remove(person)
+    }
     fun removePerson(person: Person) = people.remove(person)
 }

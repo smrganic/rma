@@ -6,11 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
+import com.example.lv2.data.PeopleRepository
 import com.example.lv2.databinding.FragmentEditPersonBinding
 import com.example.lv2.model.Person
 
 class EditPersonFragment : Fragment() {
+
     lateinit var fragmentEditPersonBinding: FragmentEditPersonBinding
+    private val peopleRepository = PeopleRepository
+    private lateinit var person: Person
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -24,18 +28,32 @@ class EditPersonFragment : Fragment() {
         )
 
         arguments?.let {
-            val person = it.getSerializable(KEY_PERSON) as Person
+            person = it.getSerializable(KEY_PERSON) as Person
             fragmentEditPersonBinding.etEditPersonName.setText(person.name)
             fragmentEditPersonBinding.etEditPersonBDay.setText(person.dateOfBirth)
             fragmentEditPersonBinding.etEditPersonQuote.setText(person.quote)
             fragmentEditPersonBinding.etEditPersonDescription.setText(person.description)
             fragmentEditPersonBinding.etEditPersonImageLink.setText(person.imageLink)
+            fragmentEditPersonBinding.btnEdit.setOnClickListener { onClick() }
             Glide.with(this)
                 .load(person.imageLink)
                 .into(fragmentEditPersonBinding.ivEditPersonProfile)
         }
 
         return fragmentEditPersonBinding.root
+    }
+
+    private fun onClick() {
+        val editedPerson = Person(
+            fragmentEditPersonBinding.etEditPersonName.text.toString(),
+            fragmentEditPersonBinding.etEditPersonBDay.text.toString(),
+            fragmentEditPersonBinding.etEditPersonDescription.text.toString(),
+            fragmentEditPersonBinding.etEditPersonQuote.text.toString(),
+            fragmentEditPersonBinding.etEditPersonImageLink.text.toString()
+        )
+        peopleRepository.editPerson(person, editedPerson)
+
+        this.activity?.supportFragmentManager?.popBackStack()
     }
 
     companion object {
