@@ -26,19 +26,20 @@ class EditPersonFragment : Fragment() {
             container,
             false
         )
-
-        arguments?.let {
-            person = it.getSerializable(KEY_PERSON) as Person
-            fragmentEditPersonBinding.etEditPersonName.setText(person.name)
-            fragmentEditPersonBinding.etEditPersonBDay.setText(person.dateOfBirth)
-            fragmentEditPersonBinding.etEditPersonQuote.setText(person.quote)
-            fragmentEditPersonBinding.etEditPersonDescription.setText(person.description)
-            fragmentEditPersonBinding.etEditPersonImageLink.setText(person.imageLink)
-            fragmentEditPersonBinding.btnEdit.setOnClickListener { onClick() }
-            Glide.with(this)
-                .load(person.imageLink)
-                .into(fragmentEditPersonBinding.ivEditPersonProfile)
+        if (arguments != null) {
+            arguments!!.let {
+                person = it.getSerializable(KEY_PERSON) as Person
+                fragmentEditPersonBinding.etEditPersonName.setText(person.name)
+                fragmentEditPersonBinding.etEditPersonBDay.setText(person.dateOfBirth)
+                fragmentEditPersonBinding.etEditPersonQuote.setText(person.quote)
+                fragmentEditPersonBinding.etEditPersonDescription.setText(person.description)
+                fragmentEditPersonBinding.etEditPersonImageLink.setText(person.imageLink)
+                Glide.with(this)
+                    .load(person.imageLink)
+                    .into(fragmentEditPersonBinding.ivEditPersonProfile)
+            }
         }
+        fragmentEditPersonBinding.btnEdit.setOnClickListener { onClick() }
 
         return fragmentEditPersonBinding.root
     }
@@ -51,7 +52,12 @@ class EditPersonFragment : Fragment() {
             fragmentEditPersonBinding.etEditPersonQuote.text.toString(),
             fragmentEditPersonBinding.etEditPersonImageLink.text.toString()
         )
-        peopleRepository.editPerson(person, editedPerson)
+        if (arguments == null) {
+            peopleRepository.insertPerson(editedPerson)
+        } else {
+            peopleRepository.editPerson(person, editedPerson)
+        }
+
 
         this.activity?.supportFragmentManager?.popBackStack()
     }
@@ -66,6 +72,10 @@ class EditPersonFragment : Fragment() {
             val fragment = EditPersonFragment()
             fragment.arguments = args
             return fragment
+        }
+
+        fun create(): EditPersonFragment {
+            return EditPersonFragment()
         }
     }
 }
