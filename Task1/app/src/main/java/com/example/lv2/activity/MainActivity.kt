@@ -28,6 +28,19 @@ class MainActivity : AppCompatActivity(), OnSelectedPersonListener {
         setUpRecycler()
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (
+            requestCode == EditPerson.activityResultCode
+            && resultCode == RESULT_OK
+            && data != null
+        ) {
+            val person = data.getSerializableExtra("PERSON") as InspiringPerson
+            PeopleRepository.insertPerson(person)
+            setUpRecycler()
+        }
+    }
+
     private fun setUpRecycler() {
 
         mainBinding.rvPeople.layoutManager = LinearLayoutManager(
@@ -46,7 +59,7 @@ class MainActivity : AppCompatActivity(), OnSelectedPersonListener {
 
     private fun onFabClick() {
         val editIntent = Intent(this, EditPerson::class.java)
-        startActivity(editIntent)
+        startActivityForResult(editIntent, EditPerson.activityResultCode)
     }
 
     override fun onSelectedPerson(person: InspiringPerson) {
