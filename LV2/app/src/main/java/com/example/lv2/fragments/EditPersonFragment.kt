@@ -39,12 +39,18 @@ class EditPersonFragment : Fragment() {
                     .into(fragmentEditPersonBinding.ivEditPersonProfile)
             }
         }
-        fragmentEditPersonBinding.btnEdit.setOnClickListener { onClick() }
+        fragmentEditPersonBinding.btnEditSave.setOnClickListener { onClickSave() }
+        fragmentEditPersonBinding.btnEditDelete.setOnClickListener { onClickDelete() }
 
         return fragmentEditPersonBinding.root
     }
 
-    private fun onClick() {
+    private fun onClickDelete() {
+        peopleRepository.removePerson(person)
+        this.activity?.supportFragmentManager?.popBackStack()
+    }
+
+    private fun onClickSave() {
         val editedPerson = Person(
             fragmentEditPersonBinding.etEditPersonName.text.toString(),
             fragmentEditPersonBinding.etEditPersonBDay.text.toString(),
@@ -57,7 +63,6 @@ class EditPersonFragment : Fragment() {
         } else {
             peopleRepository.editPerson(person, editedPerson)
         }
-
 
         this.activity?.supportFragmentManager?.popBackStack()
     }
