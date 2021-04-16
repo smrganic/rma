@@ -12,7 +12,6 @@ class PersonViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val itemBinding = RecyclerItemBinding.bind(itemView)
         itemBinding.tvRecyclerItemName.text = person.name
         itemBinding.tvRecyclerItemBDay.text = person.dateOfBirth
-        itemBinding.tvRecyclerItemQuote.text = person.quote
         itemBinding.tvRecyclerItemDescription.text = person.description
         Glide.with(itemView.context)
             .load(person.imageLink)

@@ -5,6 +5,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.lv2.Inspired
 import com.example.lv2.data.PeopleRepository
@@ -49,7 +50,6 @@ class MainActivity : AppCompatActivity(), OnSelectedPersonListener {
     }
 
     override fun onSelectedPerson(person: InspiringPerson) {
-        val editIntent = Intent(this, EditPerson::class.java)
-        startActivity(editIntent)
+        Toast.makeText(this, person.quote, Toast.LENGTH_SHORT).show()
     }
 }
