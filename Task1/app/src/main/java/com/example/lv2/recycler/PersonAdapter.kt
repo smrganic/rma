@@ -29,8 +29,7 @@ class PersonAdapter(
 
     override fun onBindViewHolder(holder: PersonViewHolder, position: Int) {
         val person = people[position]
-        holder.bind(person)
-        holder.itemView.setOnClickListener { listener.onSelectedPerson(person) }
+        holder.bind(person, listener)
     }
 
     override fun getItemCount() = people.size
