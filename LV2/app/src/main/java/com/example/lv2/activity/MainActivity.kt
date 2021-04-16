@@ -8,7 +8,7 @@ import com.example.lv2.fragments.EditPersonFragment
 import com.example.lv2.fragments.PeopleListFragment
 import com.example.lv2.listeners.OnSelectedPersonListener
 import com.example.lv2.listeners.fabOnClickListener
-import com.example.lv2.model.Person
+import com.example.lv2.model.InspiringPerson
 
 class MainActivity : AppCompatActivity(), OnSelectedPersonListener, fabOnClickListener {
 
@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity(), OnSelectedPersonListener, fabOnClickLi
             .commit()
     }
 
-    override fun onSelectedPerson(person: Person) {
+    override fun onSelectedPerson(person: InspiringPerson) {
         supportFragmentManager.beginTransaction()
             .replace(
                 R.id.fl_fragmentContainer,

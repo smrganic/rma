@@ -8,13 +8,13 @@ import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.example.lv2.data.PeopleRepository
 import com.example.lv2.databinding.FragmentEditPersonBinding
-import com.example.lv2.model.Person
+import com.example.lv2.model.InspiringPerson
 
 class EditPersonFragment : Fragment() {
 
     lateinit var fragmentEditPersonBinding: FragmentEditPersonBinding
     private val peopleRepository = PeopleRepository
-    private lateinit var person: Person
+    private lateinit var person: InspiringPerson
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -28,7 +28,7 @@ class EditPersonFragment : Fragment() {
         )
         if (arguments != null) {
             arguments!!.let {
-                person = it.getSerializable(KEY_PERSON) as Person
+                person = it.getSerializable(KEY_PERSON) as InspiringPerson
                 fragmentEditPersonBinding.etEditPersonName.setText(person.name)
                 fragmentEditPersonBinding.etEditPersonBDay.setText(person.dateOfBirth)
                 fragmentEditPersonBinding.etEditPersonQuote.setText(person.quote)
@@ -51,7 +51,7 @@ class EditPersonFragment : Fragment() {
     }
 
     private fun onClickSave() {
-        val editedPerson = Person(
+        val editedPerson = InspiringPerson(
             fragmentEditPersonBinding.etEditPersonName.text.toString(),
             fragmentEditPersonBinding.etEditPersonBDay.text.toString(),
             fragmentEditPersonBinding.etEditPersonDescription.text.toString(),
@@ -71,7 +71,7 @@ class EditPersonFragment : Fragment() {
         const val TAG = "Edit PERSON FRAGMENT"
         private const val KEY_PERSON = "PERSON"
 
-        fun create(person: Person): EditPersonFragment {
+        fun create(person: InspiringPerson): EditPersonFragment {
             val args = Bundle()
             args.putSerializable(KEY_PERSON, person)
             val fragment = EditPersonFragment()

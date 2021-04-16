@@ -5,15 +5,15 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.lv2.R
 import com.example.lv2.listeners.OnSelectedPersonListener
-import com.example.lv2.model.Person
+import com.example.lv2.model.InspiringPerson
 
 class PersonAdapter(
-    people: List<Person>,
+    people: List<InspiringPerson>,
     private val listener: OnSelectedPersonListener
 )
     : RecyclerView.Adapter<PersonViewHolder>() {
 
-    private val people: MutableList<Person> = mutableListOf()
+    private val people: MutableList<InspiringPerson> = mutableListOf()
     init {
         this.people.clear()
         this.people.addAll(people)
