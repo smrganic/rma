@@ -2,6 +2,7 @@ package com.example.lv3task1.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.lv3task1.BirdWatch
 import com.example.lv3task1.R
 import com.example.lv3task1.databinding.ActivityMainBinding
 import com.example.lv3task1.prefs.Preferences
