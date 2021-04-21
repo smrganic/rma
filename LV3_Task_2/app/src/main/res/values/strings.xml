@@ -9,4 +9,7 @@
     <string name="image_link">Image Link</string>
     <string name="add_new_person">Add new person</string>
     <string name="delete">Delete</string>
+    <string name="name">Name</string>
+    <string name="birthday">Birthday</string>
+    <string name="quote">Quote</string>
 </resources>
