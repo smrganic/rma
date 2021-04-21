@@ -70,16 +70,16 @@ class EditPersonFragment : Fragment() {
         const val TAG = "Edit PERSON FRAGMENT"
         private const val KEY_PERSON = "PERSON"
 
-        fun create(person: InspiringPerson): EditPersonFragment {
-            val args = Bundle()
-            args.putSerializable(KEY_PERSON, person)
-            val fragment = EditPersonFragment()
-            fragment.arguments = args
-            return fragment
-        }
-
-        fun create(): EditPersonFragment {
-            return EditPersonFragment()
+        fun create(person: InspiringPerson?): EditPersonFragment {
+            return if (person == null) {
+                EditPersonFragment()
+            } else {
+                val args = Bundle()
+                args.putSerializable(KEY_PERSON, person)
+                val fragment = EditPersonFragment()
+                fragment.arguments = args
+                fragment
+            }
         }
     }
 }

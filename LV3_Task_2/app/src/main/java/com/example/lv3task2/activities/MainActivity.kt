@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity(), OnSelectedPersonListener, FabOnClickLi
         supportFragmentManager.beginTransaction()
             .replace(
                 R.id.fl_fragmentContainer,
-                EditPersonFragment.create(),
+                EditPersonFragment.create(person = null),
                 EditPersonFragment.TAG
             )
             .addToBackStack(null)
