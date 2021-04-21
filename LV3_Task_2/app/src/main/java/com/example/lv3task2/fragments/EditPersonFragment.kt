@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.example.lv3task2.data.PeopleRepository
@@ -45,11 +46,26 @@ class EditPersonFragment : Fragment() {
     }
 
     private fun onClickDelete() {
-        PeopleRepository.removePerson(person)
+        if (arguments == null) {
+            Toast.makeText(activity, "Nothing to delete, save a person first!", Toast.LENGTH_SHORT)
+                .show()
+            return
+        }
+        PeopleRepository.remove(person)
         this.activity?.supportFragmentManager?.popBackStack()
     }
 
     private fun onClickSave() {
+        fragmentEditPersonBinding.apply {
+            if (etEditPersonName.text.toString() == "" || etEditPersonBDay.text.toString() == "") {
+                Toast.makeText(
+                    activity,
+                    "Add the persons name and date of birth.",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return
+            }
+        }
         val editedPerson = InspiringPerson(
             fragmentEditPersonBinding.etEditPersonName.text.toString(),
             fragmentEditPersonBinding.etEditPersonBDay.text.toString(),
@@ -58,9 +74,9 @@ class EditPersonFragment : Fragment() {
             fragmentEditPersonBinding.etEditPersonImageLink.text.toString()
         )
         if (arguments == null) {
-            PeopleRepository.insertPerson(editedPerson)
+            PeopleRepository.insert(editedPerson)
         } else {
-            PeopleRepository.editPerson(person, editedPerson)
+            PeopleRepository.edit(person, editedPerson)
         }
 
         this.activity?.supportFragmentManager?.popBackStack()

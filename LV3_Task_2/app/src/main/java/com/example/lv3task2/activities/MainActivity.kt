@@ -41,7 +41,6 @@ class MainActivity : AppCompatActivity(), OnSelectedPersonListener, FabOnClickLi
             .commit()
     }
 
-
     override fun onClick() {
         supportFragmentManager.beginTransaction()
             .replace(
