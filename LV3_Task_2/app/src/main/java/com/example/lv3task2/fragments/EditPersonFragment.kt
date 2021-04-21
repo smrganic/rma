@@ -36,8 +36,15 @@ class EditPersonFragment : Fragment() {
 
         fragmentEditPersonBinding.btnEditSave.setOnClickListener { onClickSave() }
         fragmentEditPersonBinding.btnEditDelete.setOnClickListener { onClickDelete() }
+        fragmentEditPersonBinding.etEditPersonImageLink.setOnFocusChangeListener { v, _ -> onImageFocusChange(v) }
 
         return fragmentEditPersonBinding.root
+    }
+
+    private fun onImageFocusChange(view: View) {
+        Glide.with(view)
+            .load(fragmentEditPersonBinding.etEditPersonImageLink.text.toString())
+            .into(fragmentEditPersonBinding.ivEditPersonProfile)
     }
 
     private fun getPersonFromArgs() {
