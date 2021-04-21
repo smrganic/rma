@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">LV3Task2</string>
+    <string name="profileDescription">profile image of inspiring person</string>
+    <string name="btn_edit_text">Save</string>
+    <string name="et_person_name">Name of the Person</string>
+    <string name="date_of_birth">Date of birth</string>
+    <string name="some_quote">Some quote</string>
+    <string name="description">Description</string>
+    <string name="image_link">Image Link</string>
+    <string name="add_new_person">Add new person</string>
+    <string name="delete">Delete</string>
 </resources>
