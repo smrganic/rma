@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.lv3task2.data.PeopleRepository
+import com.example.lv3task2.data.PersonDao
+import com.example.lv3task2.data.PersonDatabaseBuilder
 import com.example.lv3task2.databinding.FragmentRecyclerPersonListBinding
 import com.example.lv3task2.listeners.FabOnClickListener
 import com.example.lv3task2.listeners.OnSelectedPersonListener
@@ -17,6 +19,9 @@ class PeopleListFragment : Fragment() {
     private lateinit var onSelectedPersonListener: OnSelectedPersonListener
     private lateinit var fabOnClickListener: FabOnClickListener
     private lateinit var peopleListBinding: FragmentRecyclerPersonListBinding
+    private val peopleRepository: PersonDao by lazy {
+        PersonDatabaseBuilder.getInstance().personDao()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,12 +51,12 @@ class PeopleListFragment : Fragment() {
         )
         peopleListBinding
             .rvPeople
-            .adapter = PersonAdapter(PeopleRepository.getPeople(), onSelectedPersonListener)
+            .adapter = PersonAdapter(peopleRepository.getPeople(), onSelectedPersonListener)
 
         peopleListBinding.fab.setOnClickListener { fabOnClickListener.onClick() }
     }
 
     companion object {
-        const val TAG = "People List Fragment"
+        const val TAG = "PEOPLE_LIST_FRAGMENT"
     }
 }

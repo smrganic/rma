@@ -8,6 +8,8 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.example.lv3task2.data.PeopleRepository
+import com.example.lv3task2.data.PersonDao
+import com.example.lv3task2.data.PersonDatabaseBuilder
 import com.example.lv3task2.databinding.FragmentEditPersonBinding
 import com.example.lv3task2.model.InspiringPerson
 
@@ -15,6 +17,9 @@ class EditPersonFragment : Fragment() {
 
     lateinit var fragmentEditPersonBinding: FragmentEditPersonBinding
     private lateinit var person: InspiringPerson
+    private val peopleRepository: PersonDao by lazy {
+        PersonDatabaseBuilder.getInstance().personDao()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -26,6 +31,16 @@ class EditPersonFragment : Fragment() {
             container,
             false
         )
+
+        getPersonFromArgs()
+
+        fragmentEditPersonBinding.btnEditSave.setOnClickListener { onClickSave() }
+        fragmentEditPersonBinding.btnEditDelete.setOnClickListener { onClickDelete() }
+
+        return fragmentEditPersonBinding.root
+    }
+
+    private fun getPersonFromArgs() {
         if (arguments != null) {
             arguments!!.let {
                 person = it.getSerializable(KEY_PERSON) as InspiringPerson
@@ -39,19 +54,18 @@ class EditPersonFragment : Fragment() {
                     .into(fragmentEditPersonBinding.ivEditPersonProfile)
             }
         }
-        fragmentEditPersonBinding.btnEditSave.setOnClickListener { onClickSave() }
-        fragmentEditPersonBinding.btnEditDelete.setOnClickListener { onClickDelete() }
-
-        return fragmentEditPersonBinding.root
     }
 
     private fun onClickDelete() {
         if (arguments == null) {
-            Toast.makeText(activity, "Nothing to delete, save a person first!", Toast.LENGTH_SHORT)
-                .show()
+            Toast.makeText(
+                activity,
+                "Nothing to delete, save a person first!",
+                Toast.LENGTH_SHORT
+            ).show()
             return
         }
-        PeopleRepository.remove(person)
+        peopleRepository.delete(person)
         this.activity?.supportFragmentManager?.popBackStack()
     }
 
@@ -67,6 +81,7 @@ class EditPersonFragment : Fragment() {
             }
         }
         val editedPerson = InspiringPerson(
+            0,
             fragmentEditPersonBinding.etEditPersonName.text.toString(),
             fragmentEditPersonBinding.etEditPersonBDay.text.toString(),
             fragmentEditPersonBinding.etEditPersonDescription.text.toString(),
@@ -74,22 +89,22 @@ class EditPersonFragment : Fragment() {
             fragmentEditPersonBinding.etEditPersonImageLink.text.toString()
         )
         if (arguments == null) {
-            PeopleRepository.insert(editedPerson)
+            peopleRepository.insert(editedPerson)
         } else {
-            PeopleRepository.edit(person, editedPerson)
+            peopleRepository.delete(person)
+            peopleRepository.insert(editedPerson)
         }
 
         this.activity?.supportFragmentManager?.popBackStack()
     }
 
     companion object {
-        const val TAG = "Edit PERSON FRAGMENT"
+        const val TAG = "EDIT_PERSON_FRAGMENT"
         private const val KEY_PERSON = "PERSON"
 
         fun create(person: InspiringPerson?): EditPersonFragment {
-            return if (person == null) {
-                EditPersonFragment()
-            } else {
+            return if (person == null) EditPersonFragment()
+            else {
                 val args = Bundle()
                 args.putSerializable(KEY_PERSON, person)
                 val fragment = EditPersonFragment()
