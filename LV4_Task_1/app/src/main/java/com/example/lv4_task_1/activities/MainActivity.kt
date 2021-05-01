@@ -24,11 +24,38 @@ class MainActivity : AppCompatActivity() {
 
     private fun setup() {
         binding.apply {
-            btnFalcon.setOnClickListener { birdCounterViewModel?.seeFalcon() }
-            btnOwl.setOnClickListener { birdCounterViewModel?.seeOwl() }
-            btnHawk.setOnClickListener { birdCounterViewModel?.seeHawk() }
-            btnEagle.setOnClickListener { birdCounterViewModel?.seeEagle() }
-            btnReset.setOnClickListener { birdCounterViewModel?.reset() }
+            btnFalcon.setOnClickListener { onButtonClick(btnFalcon.id) }
+            btnOwl.setOnClickListener { onButtonClick(btnOwl.id) }
+            btnHawk.setOnClickListener { onButtonClick(btnHawk.id) }
+            btnEagle.setOnClickListener { onButtonClick(btnEagle.id) }
+            btnReset.setOnClickListener { onButtonClick(btnReset.id) }
+        }
+    }
+
+    private fun onButtonClick(id: Int) {
+        binding.apply {
+            when (id) {
+                btnFalcon.id -> {
+                    birdCounterViewModel?.seeFalcon()
+                    tvBirdCounter.setBackgroundColor(resources.getColor(R.color.light_green))
+                }
+                btnOwl.id -> {
+                    birdCounterViewModel?.seeOwl()
+                    tvBirdCounter.setBackgroundColor(resources.getColor(R.color.red))
+                }
+                btnHawk.id -> {
+                    birdCounterViewModel?.seeHawk()
+                    tvBirdCounter.setBackgroundColor(resources.getColor(R.color.orange))
+                }
+                btnEagle.id -> {
+                    birdCounterViewModel?.seeEagle()
+                    tvBirdCounter.setBackgroundColor(resources.getColor(R.color.green))
+                }
+                btnReset.id -> {
+                    birdCounterViewModel?.reset()
+                    tvBirdCounter.setBackgroundColor(resources.getColor(android.R.color.transparent))
+                }
+            }
         }
     }
 }
