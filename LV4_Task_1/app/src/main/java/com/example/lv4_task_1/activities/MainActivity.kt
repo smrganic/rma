@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
         if(Preferences.getBirdCounter() != 0) {
             birdCounterViewModel.setUpFromSharedPrefs()
         }
-        binding.tvBirdCounter.setBackgroundColor(Preferences.getColor())
+        binding.tvBirdCounter.setBackgroundColor(resources.getColor(Preferences.getColor()))
     }
 
     private fun setup() {
