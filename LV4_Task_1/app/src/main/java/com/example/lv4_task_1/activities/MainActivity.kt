@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.databinding.DataBindingUtil
 import com.example.lv4_task_1.R
 import com.example.lv4_task_1.databinding.ActivityMainBinding
+import com.example.lv4_task_1.prefs.Preferences
 import com.example.lv4_task_1.viewmodel.BirdCounterViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -20,6 +21,11 @@ class MainActivity : AppCompatActivity() {
         binding.birdCounterViewModel = birdCounterViewModel
         binding.lifecycleOwner = this
         setup()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.apply { tvBirdCounter.setBackgroundColor(Preferences.getColor()) }
     }
 
     private fun setup() {
@@ -38,22 +44,27 @@ class MainActivity : AppCompatActivity() {
                 btnFalcon.id -> {
                     birdCounterViewModel?.seeFalcon()
                     tvBirdCounter.setBackgroundColor(resources.getColor(R.color.light_green))
+                    Preferences.saveColor(resources.getColor(R.color.light_green))
                 }
                 btnOwl.id -> {
                     birdCounterViewModel?.seeOwl()
                     tvBirdCounter.setBackgroundColor(resources.getColor(R.color.red))
+                    Preferences.saveColor(resources.getColor(R.color.red))
                 }
                 btnHawk.id -> {
                     birdCounterViewModel?.seeHawk()
                     tvBirdCounter.setBackgroundColor(resources.getColor(R.color.orange))
+                    Preferences.saveColor(resources.getColor(R.color.orange))
                 }
                 btnEagle.id -> {
                     birdCounterViewModel?.seeEagle()
                     tvBirdCounter.setBackgroundColor(resources.getColor(R.color.green))
+                    Preferences.saveColor(resources.getColor(R.color.green))
                 }
                 btnReset.id -> {
                     birdCounterViewModel?.reset()
                     tvBirdCounter.setBackgroundColor(resources.getColor(android.R.color.transparent))
+                    Preferences.saveColor(resources.getColor(android.R.color.transparent))
                 }
             }
         }
