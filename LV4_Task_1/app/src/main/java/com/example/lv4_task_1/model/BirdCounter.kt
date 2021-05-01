@@ -10,10 +10,16 @@ class BirdCounter {
     var eagleCounter = 0
         private set
 
-    val birdsSeen = falconCounter + owlCounter + hawkCounter + eagleCounter
+    val birdsSeen get() = (falconCounter + owlCounter + hawkCounter + eagleCounter)
 
     fun seeFalcon() = falconCounter++
     fun seeOwl() = owlCounter++
     fun seeHawk() = hawkCounter++
     fun seeEagle() = eagleCounter++
+    fun reset() {
+        falconCounter = 0
+        owlCounter = 0
+        hawkCounter = 0
+        eagleCounter = 0
+    }
 }
