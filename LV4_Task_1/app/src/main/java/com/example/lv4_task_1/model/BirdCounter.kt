@@ -1,14 +1,10 @@
 package com.example.lv4_task_1.model
 
-class BirdCounter {
+class BirdCounter() {
     var falconCounter = 0
-        private set
     var owlCounter = 0
-        private set
     var hawkCounter = 0
-        private set
     var eagleCounter = 0
-        private set
 
     val birdsSeen get() = (falconCounter + owlCounter + hawkCounter + eagleCounter)
 

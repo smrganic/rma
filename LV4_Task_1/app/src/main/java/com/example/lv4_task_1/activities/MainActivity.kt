@@ -25,7 +25,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        binding.apply { tvBirdCounter.setBackgroundColor(Preferences.getColor()) }
+        if(Preferences.getBirdCounter() != 0) {
+            birdCounterViewModel.setUpFromSharedPrefs()
+        }
+        binding.tvBirdCounter.setBackgroundColor(Preferences.getColor())
     }
 
     private fun setup() {
@@ -44,27 +47,22 @@ class MainActivity : AppCompatActivity() {
                 btnFalcon.id -> {
                     birdCounterViewModel?.seeFalcon()
                     tvBirdCounter.setBackgroundColor(resources.getColor(R.color.light_green))
-                    Preferences.saveColor(resources.getColor(R.color.light_green))
                 }
                 btnOwl.id -> {
                     birdCounterViewModel?.seeOwl()
                     tvBirdCounter.setBackgroundColor(resources.getColor(R.color.red))
-                    Preferences.saveColor(resources.getColor(R.color.red))
                 }
                 btnHawk.id -> {
                     birdCounterViewModel?.seeHawk()
                     tvBirdCounter.setBackgroundColor(resources.getColor(R.color.orange))
-                    Preferences.saveColor(resources.getColor(R.color.orange))
                 }
                 btnEagle.id -> {
                     birdCounterViewModel?.seeEagle()
                     tvBirdCounter.setBackgroundColor(resources.getColor(R.color.green))
-                    Preferences.saveColor(resources.getColor(R.color.green))
                 }
                 btnReset.id -> {
                     birdCounterViewModel?.reset()
                     tvBirdCounter.setBackgroundColor(resources.getColor(android.R.color.transparent))
-                    Preferences.saveColor(resources.getColor(android.R.color.transparent))
                 }
             }
         }
