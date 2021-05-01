@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="BirdCounter"
-            type="com.example.lv4_task_1.model.BirdCounter" />
+            name="BirdCounterViewModel"
+            type="com.example.lv4_task_1.viewmodel.BirdCounterViewModel" />
 
     </data>
 
@@ -42,7 +42,7 @@
             android:gravity="center_horizontal"
             android:textAlignment="center"
             android:textSize="32sp"
-
+            android:text="@{String.valueOf(BirdCounterViewModel.birdsSeen)}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"

@@ -17,17 +17,18 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        binding.birdCounterViewModel = birdCounterViewModel
+        binding.lifecycleOwner = this
         setup()
     }
 
     private fun setup() {
         binding.apply {
-            btnFalcon.setOnClickListener { birdCounterViewModel.seeFalcon() }
-            btnOwl.setOnClickListener { birdCounterViewModel.seeOwl() }
-            btnHawk.setOnClickListener { birdCounterViewModel.seeHawk() }
-            btnEagle.setOnClickListener { birdCounterViewModel.seeEagle() }
-            btnReset.setOnClickListener { birdCounterViewModel.reset() }
+            btnFalcon.setOnClickListener { birdCounterViewModel?.seeFalcon() }
+            btnOwl.setOnClickListener { birdCounterViewModel?.seeOwl() }
+            btnHawk.setOnClickListener { birdCounterViewModel?.seeHawk() }
+            btnEagle.setOnClickListener { birdCounterViewModel?.seeEagle() }
+            btnReset.setOnClickListener { birdCounterViewModel?.reset() }
         }
-        birdCounterViewModel.birdsSeen.observe(this, { binding.tvBirdCounter.text = it.toString() })
     }
 }

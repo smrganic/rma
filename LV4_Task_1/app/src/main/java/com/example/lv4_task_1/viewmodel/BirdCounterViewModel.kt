@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import com.example.lv4_task_1.model.BirdCounter
 
 class BirdCounterViewModel(private val birdCounter: BirdCounter) : ViewModel() {
-    private val counter = MutableLiveData(birdCounter)
 
     private val _falconNumber = MutableLiveData(birdCounter.falconCounter)
     val falconNumber: LiveData<Int> = _falconNumber
@@ -29,8 +28,31 @@ class BirdCounterViewModel(private val birdCounter: BirdCounter) : ViewModel() {
         _falconNumber.postValue(birdCounter.falconCounter)
         _birdsSeen.postValue(birdCounter.birdsSeen)
     }
-    fun seeOwl() = counter.value?.seeOwl()
-    fun seeHawk() = counter.value?.seeHawk()
-    fun seeEagle() = counter.value?.seeEagle()
-    fun reset() = counter.value?.reset()
+
+    fun seeOwl() {
+        birdCounter.seeOwl()
+        _owlNumber.postValue(birdCounter.owlCounter)
+        _birdsSeen.postValue(birdCounter.birdsSeen)
+    }
+
+    fun seeHawk() {
+        birdCounter.seeHawk()
+        _hawkNumber.postValue(birdCounter.hawkCounter)
+        _birdsSeen.postValue(birdCounter.birdsSeen)
+    }
+
+    fun seeEagle() {
+        birdCounter.seeEagle()
+        _eagleNumber.postValue(birdCounter.eagleCounter)
+        _birdsSeen.postValue(birdCounter.birdsSeen)
+    }
+
+    fun reset() {
+        birdCounter.reset()
+        _falconNumber.postValue(birdCounter.falconCounter)
+        _owlNumber.postValue(birdCounter.owlCounter)
+        _hawkNumber.postValue(birdCounter.hawkCounter)
+        _eagleNumber.postValue(birdCounter.eagleCounter)
+        _birdsSeen.postValue(birdCounter.birdsSeen)
+    }
 }
