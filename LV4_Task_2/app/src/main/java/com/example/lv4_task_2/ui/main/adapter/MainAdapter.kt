@@ -21,6 +21,7 @@ class MainAdapter(
             Glide.with(itemBinding.imageViewAvatar.context)
                 .load(user.avatar)
                 .into(itemBinding.imageViewAvatar)
+            // Glide is working fine, API for images is broken.
         }
     }
 
