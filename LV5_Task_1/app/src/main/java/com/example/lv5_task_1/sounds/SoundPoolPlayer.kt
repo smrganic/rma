@@ -5,11 +5,10 @@ import android.media.AudioAttributes
 import android.media.SoundPool
 import com.example.lv5_task_1.R
 
-class SoundPoolPlayer(private val context: Context) : AudioPlayer {
+class SoundPoolPlayer(context: Context) : AudioPlayer {
 
     private val priority: Int = 1
     private val maxStreams: Int = 3
-    private val srcQuality: Int = 1
 
     private val leftVolume = 1f
     private val rightVolume = 1f
@@ -18,19 +17,55 @@ class SoundPoolPlayer(private val context: Context) : AudioPlayer {
 
     private val soundPool: SoundPool
 
+    private var soundLoaded: Boolean = false
+    var soundMap: HashMap<Int, Int> = HashMap()
+
     init {
+
         val audioAttributes = AudioAttributes.Builder()
             .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
             .setUsage(AudioAttributes.USAGE_GAME)
             .build()
+
         soundPool = SoundPool.Builder()
             .setAudioAttributes(audioAttributes)
             .setMaxStreams(maxStreams)
             .build()
+
+        soundMap[R.raw.harley] = soundPool.load(context, R.raw.harley, priority)
+        soundMap[R.raw.oldcar] = soundPool.load(context, R.raw.oldcar, priority)
+        soundMap[R.raw.ufo] = soundPool.load(context, R.raw.ufo, priority)
+
+        soundPool.setOnLoadCompleteListener { _, _, _ -> soundLoaded = true }
     }
 
     override fun playSound(id: Int) {
-        val rollingSoundId = soundPool.load(context, id, priority)
-        soundPool.play(rollingSoundId, leftVolume, rightVolume, priority, shouldLoop, playbackRate)
+        if (soundLoaded)
+            when (id) {
+                R.raw.harley -> soundPool.play(
+                    soundMap[id]!!,
+                    leftVolume,
+                    rightVolume,
+                    priority,
+                    shouldLoop,
+                    playbackRate
+                )
+                R.raw.oldcar -> soundPool.play(
+                    soundMap[id]!!,
+                    leftVolume,
+                    rightVolume,
+                    priority,
+                    shouldLoop,
+                    playbackRate
+                )
+                R.raw.ufo -> soundPool.play(
+                    soundMap[id]!!,
+                    leftVolume,
+                    rightVolume,
+                    priority,
+                    shouldLoop,
+                    playbackRate
+                )
+            }
     }
 }

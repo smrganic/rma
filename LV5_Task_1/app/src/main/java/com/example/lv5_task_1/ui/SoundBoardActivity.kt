@@ -8,6 +8,7 @@ import android.widget.ImageButton
 import com.example.lv5_task_1.R
 import com.example.lv5_task_1.databinding.ActivityBoardSoundBinding
 import com.example.lv5_task_1.sounds.AudioPlayer
+import com.example.lv5_task_1.sounds.SoundPoolPlayer
 import org.koin.android.ext.android.inject
 
 class SoundBoardActivity : AppCompatActivity() {
@@ -25,14 +26,13 @@ class SoundBoardActivity : AppCompatActivity() {
 
     private fun setupUI() {
         binding.apply {
-            ibHarley.setOnClickListener { onImageClick(R.id.ib_harley) }
-            ibOldCar.setOnClickListener { onImageClick(R.id.ib_oldCar) }
-            ibUfo.setOnClickListener { onImageClick(R.id.ib_ufo) }
+            imageButtons = listOf(ibHarley, ibOldCar, ibUfo)
+            imageButtons.forEach { imageButton -> imageButton.setOnClickListener { onImageClick(it.id) } }
         }
-        audioPlayer.playSound(R.raw.harley)
     }
+
     private fun onImageClick(id: Int) {
-        when(id) {
+        when (id) {
             R.id.ib_harley -> audioPlayer.playSound(R.raw.harley)
             R.id.ib_oldCar -> audioPlayer.playSound(R.raw.oldcar)
             R.id.ib_ufo -> audioPlayer.playSound(R.raw.ufo)
