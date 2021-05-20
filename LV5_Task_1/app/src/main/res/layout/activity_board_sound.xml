@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.SoundBoardActivity">
+
+    <ImageButton
+        android:scaleType="fitCenter"
+        android:id="@+id/ib_harley"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_margin="@dimen/middleMargin"
+        app:layout_constraintEnd_toStartOf="@+id/ib_oldCar"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/button_for_harley_sound" />
+
+    <ImageButton
+        android:scaleType="fitCenter"
+        android:id="@+id/ib_oldCar"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_margin="@dimen/middleMargin"
+        app:layout_constraintEnd_toStartOf="@+id/ib_ufo"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/ib_harley"
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/button_for_old_car_sound" />
+
+    <ImageButton
+        android:scaleType="fitCenter"
+        android:id="@+id/ib_ufo"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_margin="@dimen/middleMargin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/ib_oldCar"
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/button_for_ufo_sound" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
