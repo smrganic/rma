@@ -1,6 +1,7 @@
 package com.example.lv5_task_1
 
 import android.app.Application
+import com.example.lv5_task_1.di.appModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
@@ -9,6 +10,7 @@ class SoundBoard : Application() {
         super.onCreate()
         startKoin {
             androidContext(this@SoundBoard)
+            modules(appModule)
         }
     }
 }

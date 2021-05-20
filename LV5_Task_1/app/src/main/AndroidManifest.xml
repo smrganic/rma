@@ -10,7 +10,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.LV5_Task_1">
-        <activity android:name=".activity.SoundBoardActivity">
+        <activity android:name=".ui.SoundBoardActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

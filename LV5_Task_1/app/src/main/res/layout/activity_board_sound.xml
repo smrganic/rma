@@ -4,10 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.SoundBoardActivity">
+    tools:context=".ui.SoundBoardActivity">
 
     <ImageButton
         android:scaleType="fitCenter"
+        android:src="@drawable/harley"
         android:id="@+id/ib_harley"
         android:layout_width="120dp"
         android:layout_height="120dp"
@@ -20,6 +21,7 @@
 
     <ImageButton
         android:scaleType="fitCenter"
+        android:src="@drawable/oldcar"
         android:id="@+id/ib_oldCar"
         android:layout_width="120dp"
         android:layout_height="120dp"
@@ -32,6 +34,7 @@
 
     <ImageButton
         android:scaleType="fitCenter"
+        android:src="@drawable/ufo"
         android:id="@+id/ib_ufo"
         android:layout_width="120dp"
         android:layout_height="120dp"
