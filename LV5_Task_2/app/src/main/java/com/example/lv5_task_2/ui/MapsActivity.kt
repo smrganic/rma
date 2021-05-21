@@ -4,10 +4,7 @@ import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.Manifest.permission.CAMERA
 import android.annotation.SuppressLint
 import android.content.Context
-import android.location.Criteria
-import android.location.Location
-import android.location.LocationListener
-import android.location.LocationManager
+import android.location.*
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.lv5_task_2.R
@@ -26,6 +23,7 @@ import java.util.jar.Manifest
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var map: GoogleMap
+    private lateinit var binding: ActivityMapsBinding
     private lateinit var locationManager: LocationManager
 
     private val locationListener = LocationListener { location ->
@@ -33,6 +31,19 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         map.clear()
         map.addMarker(MarkerOptions().position(position).title("Custom Marker"))
         map.moveCamera(CameraUpdateFactory.newLatLng(position))
+        updateViews(location)
+    }
+
+    private fun updateViews(location: Location) {
+        val geocoder = Geocoder(this)
+        val address = geocoder.getFromLocation(location.latitude, location.longitude, 1)[0]
+        binding.apply {
+            latitude.text = location.latitude.toString()
+            longitude.text = location.longitude.toString()
+            this.address.text = address.getAddressLine(0)
+            country.text = address.countryName
+            city.text = address.locality
+        }
     }
 
     companion object {
@@ -41,12 +52,19 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_maps)
+
+        // Setup binding
+        binding = ActivityMapsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
-                .findFragmentById(R.id.map) as SupportMapFragment
+            .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+        binding.btnTakePhoto.setOnClickListener { }
     }
 
     /**
@@ -61,24 +79,28 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
 
-        // Add a marker in Sydney and move the camera
-        val sydney = LatLng(-34.0, 151.0)
-        map.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        map.moveCamera(CameraUpdateFactory.newLatLng(sydney))
-
-        methodRequiresTwoPermission()
+        trackCurrentLocation()
     }
 
     @SuppressLint("MissingPermission")
     @AfterPermissionGranted(REQUEST_CODE_LOCATION_AND_CAMERA_PERMISSION)
-    private fun methodRequiresTwoPermission() {
+    private fun trackCurrentLocation() {
         if (EasyPermissions.hasPermissions(this, ACCESS_FINE_LOCATION, CAMERA)) {
+
             val criteria = Criteria()
             criteria.accuracy = Criteria.ACCURACY_FINE
+
             val provider = locationManager.getBestProvider(criteria, true)
             val minTime = 1000L
             val minDistance = 10.0f
-            locationManager.requestLocationUpdates(provider!!, minTime, minDistance, locationListener)
+
+            locationManager.requestLocationUpdates(
+                provider!!,
+                minTime,
+                minDistance,
+                locationListener
+            )
+
         } else {
             // Do not have permissions, request them now
             EasyPermissions.requestPermissions(
