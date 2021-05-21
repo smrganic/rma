@@ -19,27 +19,21 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.vmadalin.easypermissions.EasyPermissions
 import com.vmadalin.easypermissions.annotations.AfterPermissionGranted
 import java.util.jar.Manifest
+import kotlin.math.roundToInt
 
-class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
+class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLongClickListener,
+    LocationListener {
 
     private lateinit var map: GoogleMap
     private lateinit var binding: ActivityMapsBinding
     private lateinit var locationManager: LocationManager
 
-    private val locationListener = LocationListener { location ->
-        val position = LatLng(location.latitude, location.longitude)
-        map.clear()
-        map.addMarker(MarkerOptions().position(position).title("Custom Marker"))
-        map.moveCamera(CameraUpdateFactory.newLatLng(position))
-        updateViews(location)
-    }
-
-    private fun updateViews(location: Location) {
-        val geocoder = Geocoder(this)
-        val address = geocoder.getFromLocation(location.latitude, location.longitude, 1)[0]
+    private fun updateViews(position: LatLng) {
+        val geoCoder = Geocoder(this)
+        val address = geoCoder.getFromLocation(position.latitude, position.longitude, 1)[0]
         binding.apply {
-            latitude.text = location.latitude.toString()
-            longitude.text = location.longitude.toString()
+            latitude.text = position.latitude.toString()
+            longitude.text = position.longitude.toString()
             this.address.text = address.getAddressLine(0)
             country.text = address.countryName
             city.text = address.locality
@@ -78,8 +72,26 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
      */
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
-
+        map.setOnMapLongClickListener(this)
         trackCurrentLocation()
+    }
+
+    override fun onMapLongClick(position: LatLng) {
+        map.addMarker(
+            MarkerOptions().position(position).title("${position.latitude}, ${position.longitude}")
+        )
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(position, 12f))
+        updateViews(position)
+    }
+
+    override fun onLocationChanged(location: Location) {
+        val position = LatLng(location.latitude, location.longitude)
+        map.clear()
+        map.addMarker(
+            MarkerOptions().position(position).title("${position.latitude}, ${position.longitude}")
+        )
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(position, 12f))
+        updateViews(position)
     }
 
     @SuppressLint("MissingPermission")
@@ -98,7 +110,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 provider!!,
                 minTime,
                 minDistance,
-                locationListener
+                this
             )
 
         } else {
@@ -111,4 +123,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             )
         }
     }
+
+
 }
