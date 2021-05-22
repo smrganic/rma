@@ -3,6 +3,7 @@ package com.example.lv5_task_2.sounds
 import android.content.Context
 import android.media.AudioAttributes
 import android.media.SoundPool
+import com.example.lv5_task_2.R
 
 class SoundPoolPlayer(context: Context) : AudioPlayer {
 
@@ -17,6 +18,7 @@ class SoundPoolPlayer(context: Context) : AudioPlayer {
     private val soundPool: SoundPool
 
     private var soundLoaded: Boolean = false
+    private val soundMap: HashMap<Int, Int> = HashMap()
 
     init {
 
@@ -32,9 +34,21 @@ class SoundPoolPlayer(context: Context) : AudioPlayer {
 
 
         soundPool.setOnLoadCompleteListener { _, _, _ -> soundLoaded = true }
+
+        soundMap[R.raw.marker] = soundPool.load(context, R.raw.marker, priority)
     }
 
     override fun playSound(id: Int) {
-        TODO("Not yet implemented")
+        if (soundLoaded)
+            when (id) {
+                R.raw.marker -> soundPool.play(
+                    soundMap[id]!!,
+                    leftVolume,
+                    rightVolume,
+                    priority,
+                    shouldLoop,
+                    playbackRate
+                )
+            }
     }
 }

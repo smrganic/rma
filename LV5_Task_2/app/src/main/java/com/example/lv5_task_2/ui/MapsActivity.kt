@@ -9,6 +9,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.lv5_task_2.R
 import com.example.lv5_task_2.databinding.ActivityMapsBinding
+import com.example.lv5_task_2.sounds.AudioPlayer
+import com.example.lv5_task_2.utils.Constants
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -18,8 +20,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.vmadalin.easypermissions.EasyPermissions
 import com.vmadalin.easypermissions.annotations.AfterPermissionGranted
-import java.util.jar.Manifest
-import kotlin.math.roundToInt
+import org.koin.android.ext.android.inject
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLongClickListener,
     LocationListener {
@@ -27,6 +28,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
     private lateinit var map: GoogleMap
     private lateinit var binding: ActivityMapsBinding
     private lateinit var locationManager: LocationManager
+    private val audioPlayer by inject<AudioPlayer>()
 
     private fun updateViews(position: LatLng) {
         val geoCoder = Geocoder(this)
@@ -40,10 +42,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         }
     }
 
-    companion object {
-        const val REQUEST_CODE_LOCATION_AND_CAMERA_PERMISSION = 1
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -52,8 +50,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         setContentView(binding.root)
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        val mapFragment = supportFragmentManager
-            .findFragmentById(R.id.map) as SupportMapFragment
+        val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
@@ -77,10 +74,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
     }
 
     override fun onMapLongClick(position: LatLng) {
+        map.clear()
         map.addMarker(
             MarkerOptions().position(position).title("${position.latitude}, ${position.longitude}")
         )
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(position, 12f))
+        audioPlayer.playSound(R.raw.marker)
         updateViews(position)
     }
 
@@ -91,11 +90,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
             MarkerOptions().position(position).title("${position.latitude}, ${position.longitude}")
         )
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(position, 12f))
+        audioPlayer.playSound(R.raw.marker)
         updateViews(position)
     }
 
     @SuppressLint("MissingPermission")
-    @AfterPermissionGranted(REQUEST_CODE_LOCATION_AND_CAMERA_PERMISSION)
+    @AfterPermissionGranted(Constants.REQUEST_CODE_LOCATION_AND_CAMERA_PERMISSION)
     private fun trackCurrentLocation() {
         if (EasyPermissions.hasPermissions(this, ACCESS_FINE_LOCATION, CAMERA)) {
 
@@ -118,7 +118,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
             EasyPermissions.requestPermissions(
                 host = this,
                 rationale = "This app need location and camera.",
-                REQUEST_CODE_LOCATION_AND_CAMERA_PERMISSION,
+                Constants.REQUEST_CODE_LOCATION_AND_CAMERA_PERMISSION,
                 ACCESS_FINE_LOCATION, CAMERA
             )
         }
