@@ -3,18 +3,15 @@ package com.example.lv5_task_2.ui
 import android.Manifest.permission.*
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Bitmap
 import android.location.*
 import android.os.Bundle
-import android.os.Environment
 import android.provider.MediaStore
-import android.text.format.DateFormat
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.example.lv5_task_2.R
 import com.example.lv5_task_2.databinding.ActivityMapsBinding
 import com.example.lv5_task_2.sounds.AudioPlayer
 import com.example.lv5_task_2.utils.Constants
+import com.example.lv5_task_2.utils.ScreenCapture
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -24,9 +21,6 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.vmadalin.easypermissions.EasyPermissions
 import com.vmadalin.easypermissions.annotations.AfterPermissionGranted
 import org.koin.android.ext.android.inject
-import java.io.File
-import java.io.FileOutputStream
-import java.util.*
 
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLongClickListener,
@@ -36,8 +30,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
     private lateinit var binding: ActivityMapsBinding
     private lateinit var locationManager: LocationManager
     private val audioPlayer by inject<AudioPlayer>()
+    private var currentLocation: LatLng? = null
 
     private fun updateViews(position: LatLng) {
+        currentLocation = position
         val geoCoder = Geocoder(this)
         val address = geoCoder.getFromLocation(position.latitude, position.longitude, 1)[0]
         binding.apply {
@@ -62,35 +58,17 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
 
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
-        val rootView = window.decorView.rootView
 
-        binding.btnTakePhoto.setOnClickListener { takeScreenShots() }
-    }
-
-    private fun takeScreenShots() {
-        val now = Date()
-        DateFormat.format("yyyy-MM-dd_hh:mm:ss", now)
-
-        try {
-            // image naming and path  to include sd card  appending name you choose for file
-            val mPath: String = this.getExternalFilesDirs(Environment.DIRECTORY_DOWNLOADS)[0].absolutePath
-
-            // create bitmap screen capture
-            val v1: View = window.decorView.rootView
-            v1.setDrawingCacheEnabled(true)
-            val bitmap: Bitmap = Bitmap.createBitmap(v1.getDrawingCache())
-            v1.setDrawingCacheEnabled(false)
-            val imageFile = File(mPath)
-            val outputStream = FileOutputStream(imageFile)
-            val quality = 100
-            bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream)
-            outputStream.flush()
-            outputStream.close()
-        } catch (e: Throwable) {
-            // Several error may come out with file handling or DOM
-            e.printStackTrace()
+        binding.btnTakePhoto.setOnClickListener {
+            val rootView = window.decorView.rootView
+            if (currentLocation != null)
+                ScreenCapture.screenShot(
+                    contentResolver,
+                    rootView,
+                    currentLocation.toString(),
+                    "Testing"
+                )
         }
-
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -149,6 +127,4 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
             )
         }
     }
-
-
 }
