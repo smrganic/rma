@@ -1,17 +1,20 @@
 package com.example.lv5_task_2.ui
 
-import android.Manifest.permission.ACCESS_FINE_LOCATION
-import android.Manifest.permission.CAMERA
+import android.Manifest.permission.*
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Bitmap
 import android.location.*
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
+import android.text.format.DateFormat
+import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import com.example.lv5_task_2.R
 import com.example.lv5_task_2.databinding.ActivityMapsBinding
 import com.example.lv5_task_2.sounds.AudioPlayer
 import com.example.lv5_task_2.utils.Constants
-
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -21,6 +24,10 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.vmadalin.easypermissions.EasyPermissions
 import com.vmadalin.easypermissions.annotations.AfterPermissionGranted
 import org.koin.android.ext.android.inject
+import java.io.File
+import java.io.FileOutputStream
+import java.util.*
+
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLongClickListener,
     LocationListener {
@@ -55,18 +62,37 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
 
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
-        binding.btnTakePhoto.setOnClickListener { }
+        val rootView = window.decorView.rootView
+
+        binding.btnTakePhoto.setOnClickListener { takeScreenShots() }
     }
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
+    private fun takeScreenShots() {
+        val now = Date()
+        DateFormat.format("yyyy-MM-dd_hh:mm:ss", now)
+
+        try {
+            // image naming and path  to include sd card  appending name you choose for file
+            val mPath: String = this.getExternalFilesDirs(Environment.DIRECTORY_DOWNLOADS)[0].absolutePath
+
+            // create bitmap screen capture
+            val v1: View = window.decorView.rootView
+            v1.setDrawingCacheEnabled(true)
+            val bitmap: Bitmap = Bitmap.createBitmap(v1.getDrawingCache())
+            v1.setDrawingCacheEnabled(false)
+            val imageFile = File(mPath)
+            val outputStream = FileOutputStream(imageFile)
+            val quality = 100
+            bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream)
+            outputStream.flush()
+            outputStream.close()
+        } catch (e: Throwable) {
+            // Several error may come out with file handling or DOM
+            e.printStackTrace()
+        }
+
+    }
+
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
         map.setOnMapLongClickListener(this)
@@ -95,7 +121,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
     }
 
     @SuppressLint("MissingPermission")
-    @AfterPermissionGranted(Constants.REQUEST_CODE_LOCATION_AND_CAMERA_PERMISSION)
+    @AfterPermissionGranted(Constants.REQUEST_CODE_LOCATION_AND_STORAGE_PERMISSION)
     private fun trackCurrentLocation() {
         if (EasyPermissions.hasPermissions(this, ACCESS_FINE_LOCATION, CAMERA)) {
 
@@ -118,8 +144,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
             EasyPermissions.requestPermissions(
                 host = this,
                 rationale = "This app need location and camera.",
-                Constants.REQUEST_CODE_LOCATION_AND_CAMERA_PERMISSION,
-                ACCESS_FINE_LOCATION, CAMERA
+                Constants.REQUEST_CODE_LOCATION_AND_STORAGE_PERMISSION,
+                ACCESS_FINE_LOCATION, READ_EXTERNAL_STORAGE
             )
         }
     }
