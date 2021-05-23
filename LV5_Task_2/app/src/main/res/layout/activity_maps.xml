@@ -15,7 +15,7 @@
         map:layout_constraintStart_toStartOf="parent"
         map:layout_constraintTop_toTopOf="parent"
         map:layout_constraintEnd_toEndOf="parent"
-        android:text="Take photo"
+        android:text="@string/btn_take_photo"
         />
     <TextView
         android:layout_margin="@dimen/mediumMargin"
@@ -24,7 +24,6 @@
         android:layout_height="wrap_content"
         map:layout_constraintTop_toBottomOf="@+id/btn_take_photo"
         map:layout_constraintStart_toStartOf="parent"
-        android:text="test"
         tools:text="@tools:sample/lorem"
         />
     <TextView
@@ -34,7 +33,6 @@
         android:layout_height="wrap_content"
         map:layout_constraintTop_toBottomOf="@+id/latitude"
         map:layout_constraintStart_toStartOf="parent"
-        android:text="test"
         tools:text="@tools:sample/lorem"
         />
     <TextView
@@ -44,7 +42,6 @@
         android:layout_height="wrap_content"
         map:layout_constraintTop_toBottomOf="@+id/longitude"
         map:layout_constraintStart_toStartOf="parent"
-        android:text="test"
         tools:text="@tools:sample/lorem"
         />
     <TextView
@@ -54,7 +51,6 @@
         android:layout_height="wrap_content"
         map:layout_constraintTop_toBottomOf="@+id/country"
         map:layout_constraintStart_toStartOf="parent"
-        android:text="test"
         tools:text="@tools:sample/lorem"
         />
     <TextView
@@ -64,7 +60,6 @@
         android:layout_height="wrap_content"
         map:layout_constraintTop_toBottomOf="@+id/city"
         map:layout_constraintStart_toStartOf="parent"
-        android:text="test"
         tools:text="@tools:sample/lorem"
         />
     <fragment

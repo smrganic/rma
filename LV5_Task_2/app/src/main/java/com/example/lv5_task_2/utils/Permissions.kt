@@ -9,12 +9,12 @@ object Permissions {
         return EasyPermissions.hasPermissions(context, permission)
     }
 
-    fun requestPermission(activity: Activity, permission: String) {
-        EasyPermissions.requestPermissions(
-            activity,
-            "Storage permission is needed to take screenshot",
-            Constants.REQUEST_CODE_READ_STORAGE_PERMISSION,
-            permission
-        )
+    fun requestPermission(
+        activity: Activity,
+        rationale: String,
+        requestCode: Int,
+        permission: String
+    ) {
+        EasyPermissions.requestPermissions(activity, rationale, requestCode, permission)
     }
 }

@@ -1,19 +1,28 @@
 package com.example.lv5_task_2.ui
 
 import android.Manifest.permission.*
+import android.R.attr.bitmap
 import android.annotation.SuppressLint
+import android.content.ContentValues
 import android.content.Context
+import android.content.Intent
+import android.graphics.Bitmap
 import android.location.*
+import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.lv5_task_2.R
 import com.example.lv5_task_2.databinding.ActivityMapsBinding
 import com.example.lv5_task_2.sounds.AudioPlayer
 import com.example.lv5_task_2.utils.Constants
+import com.example.lv5_task_2.utils.Permissions
 import com.example.lv5_task_2.utils.ScreenCapture
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.GoogleMap.SnapshotReadyCallback
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
@@ -21,6 +30,10 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.vmadalin.easypermissions.EasyPermissions
 import com.vmadalin.easypermissions.annotations.AfterPermissionGranted
 import org.koin.android.ext.android.inject
+import java.io.File
+import java.io.FileNotFoundException
+import java.io.IOException
+import java.io.OutputStream
 
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLongClickListener,
@@ -58,16 +71,18 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
 
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
-
         binding.btnTakePhoto.setOnClickListener {
-            val rootView = window.decorView.rootView
-            if (currentLocation != null)
+            currentLocation?.let {
+                val rootView = window.decorView.rootView
+                val imageName = String.format("%.4f, %.4f", it.latitude, it.longitude);
                 ScreenCapture.screenShot(
                     contentResolver,
                     rootView,
-                    currentLocation.toString(),
-                    "Testing"
+                    imageName,
+                    getString(R.string.imageDesc)
                 )
+                Toast.makeText(this, getString(R.string.imageSaved), Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -99,9 +114,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
     }
 
     @SuppressLint("MissingPermission")
-    @AfterPermissionGranted(Constants.REQUEST_CODE_LOCATION_AND_STORAGE_PERMISSION)
+    @AfterPermissionGranted(Constants.REQUEST_CODE_LOCATION_PERMISSION)
     private fun trackCurrentLocation() {
-        if (EasyPermissions.hasPermissions(this, ACCESS_FINE_LOCATION, CAMERA)) {
+        if (Permissions.hasPermission(this, ACCESS_FINE_LOCATION)) {
 
             val criteria = Criteria()
             criteria.accuracy = Criteria.ACCURACY_FINE
@@ -110,6 +125,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
             val minTime = 1000L
             val minDistance = 10.0f
 
+            // this refers to onLocationChanged
             locationManager.requestLocationUpdates(
                 provider!!,
                 minTime,
@@ -119,11 +135,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
 
         } else {
             // Do not have permissions, request them now
-            EasyPermissions.requestPermissions(
-                host = this,
-                rationale = "This app need location and camera.",
-                Constants.REQUEST_CODE_LOCATION_AND_STORAGE_PERMISSION,
-                ACCESS_FINE_LOCATION, READ_EXTERNAL_STORAGE
+            Permissions.requestPermission(
+                this,
+                getString(R.string.locationRationale),
+                Constants.REQUEST_CODE_LOCATION_PERMISSION,
+                ACCESS_FINE_LOCATION
             )
         }
     }

@@ -22,7 +22,7 @@ object ScreenCapture {
     fun screenShot(contentResolver: ContentResolver, rootView: View, name: String, desc: String) {
         MediaStore.Images.Media.insertImage(
             contentResolver,
-            ScreenCapture.getBitmap(rootView),
+            getBitmap(rootView),
             name,
             desc
         )
