@@ -4,5 +4,6 @@
     <string name="imageDesc">Map app image.</string>
     <string name="imageSaved">Image saved to gallery</string>
     <string name="locationRationale">Maps needs location info to show your location</string>
-    <string name="btn_take_photo">Take photo</string>
+    <string name="btn_take_photo">Screen Shot Location</string>
+    <string name="take_camera_photo">Take Camera Photo</string>
 </resources>

@@ -1,77 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:id="@+id/layout_activity_maps"
+<layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:map="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
-    <Button
-        android:id="@+id/btn_take_photo"
-        android:layout_margin="@dimen/mediumMargin"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        map:layout_constraintStart_toStartOf="parent"
-        map:layout_constraintTop_toTopOf="parent"
-        map:layout_constraintEnd_toEndOf="parent"
-        android:text="@string/btn_take_photo"
-        />
-    <TextView
-        android:layout_margin="@dimen/mediumMargin"
-        android:id="@+id/latitude"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        map:layout_constraintTop_toBottomOf="@+id/btn_take_photo"
-        map:layout_constraintStart_toStartOf="parent"
-        tools:text="@tools:sample/lorem"
-        />
-    <TextView
-        android:layout_margin="@dimen/mediumMargin"
-        android:id="@+id/longitude"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        map:layout_constraintTop_toBottomOf="@+id/latitude"
-        map:layout_constraintStart_toStartOf="parent"
-        tools:text="@tools:sample/lorem"
-        />
-    <TextView
-        android:layout_margin="@dimen/mediumMargin"
-        android:id="@+id/country"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        map:layout_constraintTop_toBottomOf="@+id/longitude"
-        map:layout_constraintStart_toStartOf="parent"
-        tools:text="@tools:sample/lorem"
-        />
-    <TextView
-        android:layout_margin="@dimen/mediumMargin"
-        android:id="@+id/city"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        map:layout_constraintTop_toBottomOf="@+id/country"
-        map:layout_constraintStart_toStartOf="parent"
-        tools:text="@tools:sample/lorem"
-        />
-    <TextView
-        android:layout_margin="@dimen/mediumMargin"
-        android:id="@+id/address"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        map:layout_constraintTop_toBottomOf="@+id/city"
-        map:layout_constraintStart_toStartOf="parent"
-        tools:text="@tools:sample/lorem"
-        />
-    <fragment
-        android:layout_marginTop="@dimen/mediumMargin"
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        map:layout_constraintTop_toBottomOf="@id/address"
-        map:layout_constraintStart_toStartOf="parent"
-        map:layout_constraintBottom_toBottomOf="parent"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="MapsViewModel"
+            type="com.example.lv5_task_2.ui.MapsViewModel" />
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_activity_maps"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        tools:context=".ui.MapsActivity" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_height="match_parent"
+        >
+
+        <Button
+            android:id="@+id/btn_take_camera_photo"
+            android:layout_margin="@dimen/mediumMargin"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            map:layout_constraintStart_toStartOf="parent"
+            map:layout_constraintTop_toTopOf="parent"
+            map:layout_constraintEnd_toEndOf="parent"
+            android:text="@string/take_camera_photo"
+            />
+        <Button
+            android:id="@+id/btn_take_photo"
+            android:layout_margin="@dimen/mediumMargin"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            map:layout_constraintStart_toStartOf="parent"
+            map:layout_constraintTop_toBottomOf="@id/btn_take_camera_photo"
+            map:layout_constraintEnd_toEndOf="parent"
+            android:text="@string/btn_take_photo"
+            />
+        <TextView
+            android:layout_margin="@dimen/mediumMargin"
+            android:id="@+id/latitude"
+            android:text="@{String.valueOf(MapsViewModel.position.latitude)}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            map:layout_constraintTop_toBottomOf="@+id/btn_take_photo"
+            map:layout_constraintStart_toStartOf="parent"
+            tools:text="@tools:sample/lorem"
+            />
+        <TextView
+            android:layout_margin="@dimen/mediumMargin"
+            android:id="@+id/longitude"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{String.valueOf(MapsViewModel.position.longitude)}"
+            map:layout_constraintTop_toBottomOf="@+id/latitude"
+            map:layout_constraintStart_toStartOf="parent"
+            tools:text="@tools:sample/lorem"
+            />
+        <TextView
+            android:layout_margin="@dimen/mediumMargin"
+            android:id="@+id/country"
+            android:text="@{String.valueOf(MapsViewModel.position.country)}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            map:layout_constraintTop_toBottomOf="@+id/longitude"
+            map:layout_constraintStart_toStartOf="parent"
+            tools:text="@tools:sample/lorem"
+            />
+        <TextView
+            android:layout_margin="@dimen/mediumMargin"
+            android:id="@+id/city"
+            android:text="@{String.valueOf(MapsViewModel.position.city)}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            map:layout_constraintTop_toBottomOf="@+id/country"
+            map:layout_constraintStart_toStartOf="parent"
+            tools:text="@tools:sample/lorem"
+            />
+        <TextView
+            android:layout_margin="@dimen/mediumMargin"
+            android:id="@+id/address"
+            android:text="@{String.valueOf(MapsViewModel.position.address)}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            map:layout_constraintTop_toBottomOf="@+id/city"
+            map:layout_constraintStart_toStartOf="parent"
+            tools:text="@tools:sample/lorem"
+            />
+
+        <com.google.android.gms.maps.MapView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:id="@+id/mapView"
+            map:layout_constraintTop_toBottomOf="@id/address"
+            map:layout_constraintStart_toStartOf="parent"
+            map:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginTop="@dimen/mediumMargin" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
+
 
 

@@ -1,19 +1,14 @@
 package com.example.lv5_task_2.ui
 
-import android.Manifest.permission.*
-import android.R.attr.bitmap
+import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.annotation.SuppressLint
-import android.content.ContentValues
 import android.content.Context
-import android.content.Intent
-import android.graphics.Bitmap
 import android.location.*
-import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import com.example.lv5_task_2.R
 import com.example.lv5_task_2.databinding.ActivityMapsBinding
 import com.example.lv5_task_2.sounds.AudioPlayer
@@ -23,39 +18,34 @@ import com.example.lv5_task_2.utils.ScreenCapture
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.GoogleMap.SnapshotReadyCallback
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import com.vmadalin.easypermissions.EasyPermissions
 import com.vmadalin.easypermissions.annotations.AfterPermissionGranted
 import org.koin.android.ext.android.inject
-import java.io.File
-import java.io.FileNotFoundException
-import java.io.IOException
-import java.io.OutputStream
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLongClickListener,
-    LocationListener {
+class MapsActivity : AppCompatActivity(), LocationListener {
 
     private lateinit var map: GoogleMap
     private lateinit var binding: ActivityMapsBinding
     private lateinit var locationManager: LocationManager
     private val audioPlayer by inject<AudioPlayer>()
     private var currentLocation: LatLng? = null
+    private val mapsViewModel by viewModel<MapsViewModel>()
 
     private fun updateViews(position: LatLng) {
         currentLocation = position
         val geoCoder = Geocoder(this)
         val address = geoCoder.getFromLocation(position.latitude, position.longitude, 1)[0]
-        binding.apply {
-            latitude.text = position.latitude.toString()
-            longitude.text = position.longitude.toString()
-            this.address.text = address.getAddressLine(0)
-            country.text = address.countryName
-            city.text = address.locality
-        }
+        val locationData = LocationData(
+            position.latitude.toString(),
+            position.longitude.toString(),
+            address.getAddressLine(0),
+            address.countryName,
+            address.locality
+        )
+        mapsViewModel.updatePosition(locationData)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,36 +53,38 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
 
         // Setup binding
         binding = ActivityMapsBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_maps)
+        binding.mapsViewModel = mapsViewModel
+        binding.lifecycleOwner = this
 
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
-        mapFragment.getMapAsync(this)
+        binding.mapView.getMapAsync {
+            map = it
+            map.setOnMapLongClickListener { onMapLongClick(it) }
+            trackCurrentLocation()
+        }
+
+        binding.mapView.onCreate(savedInstanceState)
 
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
         binding.btnTakePhoto.setOnClickListener {
             currentLocation?.let {
-                val rootView = window.decorView.rootView
                 val imageName = String.format("%.4f, %.4f", it.latitude, it.longitude);
-                ScreenCapture.screenShot(
-                    contentResolver,
-                    rootView,
-                    imageName,
-                    getString(R.string.imageDesc)
-                )
+                val callback = SnapshotReadyCallback { bitmap ->
+                    ScreenCapture.screenShot(
+                        contentResolver,
+                        bitmap!!,
+                        imageName,
+                        getString(R.string.imageDesc)
+                    )
+                }
+                map.snapshot(callback)
                 Toast.makeText(this, getString(R.string.imageSaved), Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    override fun onMapReady(googleMap: GoogleMap) {
-        map = googleMap
-        map.setOnMapLongClickListener(this)
-        trackCurrentLocation()
-    }
-
-    override fun onMapLongClick(position: LatLng) {
+    private fun onMapLongClick(position: LatLng) {
         map.clear()
         map.addMarker(
             MarkerOptions().position(position).title("${position.latitude}, ${position.longitude}")
@@ -142,5 +134,40 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
                 ACCESS_FINE_LOCATION
             )
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        binding.mapView.onStart()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.mapView.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        binding.mapView.onPause()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        binding.mapView.onStart()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        binding.mapView.onDestroy()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        binding.mapView.onSaveInstanceState(outState)
+    }
+
+    override fun onLowMemory() {
+        super.onLowMemory()
+        binding.mapView.onLowMemory()
     }
 }

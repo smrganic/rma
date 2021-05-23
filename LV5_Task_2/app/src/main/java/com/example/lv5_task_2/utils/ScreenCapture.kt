@@ -27,4 +27,13 @@ object ScreenCapture {
             desc
         )
     }
+
+    fun screenShot(contentResolver: ContentResolver, bitmap: Bitmap, name: String, desc: String) {
+        MediaStore.Images.Media.insertImage(
+            contentResolver,
+            bitmap,
+            name,
+            desc
+        )
+    }
 }
