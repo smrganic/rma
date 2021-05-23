@@ -1,14 +1,21 @@
 package com.example.lv5_task_2.ui
 
 import android.Manifest.permission.ACCESS_FINE_LOCATION
+import android.Manifest.permission.CAMERA
 import android.annotation.SuppressLint
+import android.content.ActivityNotFoundException
 import android.content.Context
-import android.location.*
+import android.content.Intent
+import android.graphics.Bitmap
+import android.location.Criteria
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
 import android.os.Bundle
+import android.provider.MediaStore
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
 import com.example.lv5_task_2.R
 import com.example.lv5_task_2.databinding.ActivityMapsBinding
 import com.example.lv5_task_2.sounds.AudioPlayer
@@ -31,22 +38,7 @@ class MapsActivity : AppCompatActivity(), LocationListener {
     private lateinit var binding: ActivityMapsBinding
     private lateinit var locationManager: LocationManager
     private val audioPlayer by inject<AudioPlayer>()
-    private var currentLocation: LatLng? = null
     private val mapsViewModel by viewModel<MapsViewModel>()
-
-    private fun updateViews(position: LatLng) {
-        currentLocation = position
-        val geoCoder = Geocoder(this)
-        val address = geoCoder.getFromLocation(position.latitude, position.longitude, 1)[0]
-        val locationData = LocationData(
-            position.latitude.toString(),
-            position.longitude.toString(),
-            address.getAddressLine(0),
-            address.countryName,
-            address.locality
-        )
-        mapsViewModel.updatePosition(locationData)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,7 +60,7 @@ class MapsActivity : AppCompatActivity(), LocationListener {
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
         binding.btnTakePhoto.setOnClickListener {
-            currentLocation?.let {
+            map.cameraPosition.target.let {
                 val imageName = String.format("%.4f, %.4f", it.latitude, it.longitude);
                 val callback = SnapshotReadyCallback { bitmap ->
                     ScreenCapture.screenShot(
@@ -82,6 +74,38 @@ class MapsActivity : AppCompatActivity(), LocationListener {
                 Toast.makeText(this, getString(R.string.imageSaved), Toast.LENGTH_SHORT).show()
             }
         }
+
+        binding.btnTakeCameraPhoto.setOnClickListener { onBtnCameraClick() }
+    }
+
+    private fun dispatchTakePictureIntent() {
+        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        try {
+            startActivityForResult(takePictureIntent, Constants.REQUEST_IMAGE_CAPTURE)
+        } catch (e: ActivityNotFoundException) {
+            // display error state to the user
+        }
+    }
+
+    // This only saves the photo thumbnail but official google docs are not helping so I don't know
+    // what else to do...
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == Constants.REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            val imageBitmap = data?.extras?.get("data") as Bitmap
+            ScreenCapture.screenShot(contentResolver, imageBitmap, "test", "desc")
+        }
+    }
+
+    private fun onBtnCameraClick() {
+        if (Permissions.hasPermission(this, CAMERA)) {
+            dispatchTakePictureIntent()
+        } else Permissions.requestPermission(
+            this,
+            "Camera is needed to take a photo",
+            Constants.REQUEST_CODE_CAMERA_PERMISSION,
+            CAMERA
+        )
     }
 
     private fun onMapLongClick(position: LatLng) {
@@ -91,7 +115,7 @@ class MapsActivity : AppCompatActivity(), LocationListener {
         )
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(position, 12f))
         audioPlayer.playSound(R.raw.marker)
-        updateViews(position)
+        mapsViewModel.updatePosition(this, position)
     }
 
     override fun onLocationChanged(location: Location) {
@@ -102,7 +126,7 @@ class MapsActivity : AppCompatActivity(), LocationListener {
         )
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(position, 12f))
         audioPlayer.playSound(R.raw.marker)
-        updateViews(position)
+        mapsViewModel.updatePosition(this, position)
     }
 
     @SuppressLint("MissingPermission")
@@ -135,6 +159,9 @@ class MapsActivity : AppCompatActivity(), LocationListener {
             )
         }
     }
+
+    // Needed to implement all of the lifecycle methods because MapSupportFragment was not
+    // playing nicely with data binding
 
     override fun onStart() {
         super.onStart()
