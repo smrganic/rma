@@ -3,7 +3,6 @@ package com.example.lv5_task_2.ui
 import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.Manifest.permission.CAMERA
 import android.annotation.SuppressLint
-import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -12,7 +11,6 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
-import android.provider.MediaStore
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -59,32 +57,36 @@ class MapsActivity : AppCompatActivity(), LocationListener {
 
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
-        binding.btnTakePhoto.setOnClickListener {
-            map.cameraPosition.target.let {
-                val imageName = String.format("%.4f, %.4f", it.latitude, it.longitude);
-                val callback = SnapshotReadyCallback { bitmap ->
-                    ScreenCapture.screenShot(
-                        contentResolver,
-                        bitmap!!,
-                        imageName,
-                        getString(R.string.imageDesc)
-                    )
-                }
-                map.snapshot(callback)
-                Toast.makeText(this, getString(R.string.imageSaved), Toast.LENGTH_SHORT).show()
-            }
-        }
+        binding.btnTakePhoto.setOnClickListener { onTakePhotoClick() }
 
         binding.btnTakeCameraPhoto.setOnClickListener { onBtnCameraClick() }
     }
 
-    private fun dispatchTakePictureIntent() {
-        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        try {
-            startActivityForResult(takePictureIntent, Constants.REQUEST_IMAGE_CAPTURE)
-        } catch (e: ActivityNotFoundException) {
-            // display error state to the user
+    private fun onTakePhotoClick() {
+        map.cameraPosition.target.let {
+            val imageName = String.format("%.4f, %.4f", it.latitude, it.longitude);
+            val callback = SnapshotReadyCallback { bitmap ->
+                ScreenCapture.saveBitmap(
+                    contentResolver,
+                    bitmap!!,
+                    imageName,
+                    getString(R.string.imageDesc)
+                )
+            }
+            map.snapshot(callback)
+            Toast.makeText(this, getString(R.string.imageSaved), Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun onBtnCameraClick() {
+        if (Permissions.hasPermission(this, CAMERA)) {
+            ScreenCapture.dispatchTakePictureIntent(this)
+        } else Permissions.requestPermission(
+            this,
+            "Camera is needed to take a photo",
+            Constants.REQUEST_CODE_CAMERA_PERMISSION,
+            CAMERA
+        )
     }
 
     // This only saves the photo thumbnail but official google docs are not helping so I don't know
@@ -93,19 +95,13 @@ class MapsActivity : AppCompatActivity(), LocationListener {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == Constants.REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             val imageBitmap = data?.extras?.get("data") as Bitmap
-            ScreenCapture.screenShot(contentResolver, imageBitmap, "test", "desc")
+            val imageName: String
+            map.cameraPosition.target.let {
+                imageName = String.format("%.4f, %.4f", it.latitude, it.longitude)
+            }
+            ScreenCapture.saveBitmap(contentResolver, imageBitmap, imageName, getString(R.string.imageDesc))
+            Toast.makeText(this, "Photo saved", Toast.LENGTH_SHORT).show()
         }
-    }
-
-    private fun onBtnCameraClick() {
-        if (Permissions.hasPermission(this, CAMERA)) {
-            dispatchTakePictureIntent()
-        } else Permissions.requestPermission(
-            this,
-            "Camera is needed to take a photo",
-            Constants.REQUEST_CODE_CAMERA_PERMISSION,
-            CAMERA
-        )
     }
 
     private fun onMapLongClick(position: LatLng) {
@@ -161,7 +157,7 @@ class MapsActivity : AppCompatActivity(), LocationListener {
     }
 
     // Needed to implement all of the lifecycle methods because MapSupportFragment was not
-    // playing nicely with data binding
+    // playing nice with data binding so MapView needed to be used.
 
     override fun onStart() {
         super.onStart()
