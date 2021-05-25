@@ -6,4 +6,7 @@
     <string name="locationRationale">Maps needs location info to show your location</string>
     <string name="btn_take_photo">Screen Shot Location</string>
     <string name="take_camera_photo">Take Camera Photo</string>
+    <string name="channel_name">Maps notifications</string>
+    <string name="photo_notification_desc">You just took a damn fine photo</string>
+    <string name="photo_notification_title">Well done my boy</string>
 </resources>

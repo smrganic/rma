@@ -10,12 +10,16 @@ import android.location.Criteria
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.example.lv5_task_2.R
 import com.example.lv5_task_2.databinding.ActivityMapsBinding
+import com.example.lv5_task_2.notifications.createNotificationChannel
+import com.example.lv5_task_2.notifications.triggerNotification
 import com.example.lv5_task_2.sounds.AudioPlayer
 import com.example.lv5_task_2.utils.Constants
 import com.example.lv5_task_2.utils.Permissions
@@ -40,6 +44,8 @@ class MapsActivity : AppCompatActivity(), LocationListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        createNotificationChannel(this)
 
         // Setup binding
         binding = ActivityMapsBinding.inflate(layoutInflater)
@@ -95,12 +101,20 @@ class MapsActivity : AppCompatActivity(), LocationListener {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == Constants.REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             val imageBitmap = data?.extras?.get("data") as Bitmap
+
+            // This should be full photo path but isn't
+            val photoUri: Uri? = data.data
+            Log.d("TAGMAINMAPSACTIVITY", photoUri.toString())
             val imageName: String
+
             map.cameraPosition.target.let {
                 imageName = String.format("%.4f, %.4f", it.latitude, it.longitude)
             }
+
             ScreenCapture.saveBitmap(contentResolver, imageBitmap, imageName, getString(R.string.imageDesc))
             Toast.makeText(this, "Photo saved", Toast.LENGTH_SHORT).show()
+
+            triggerNotification(this)
         }
     }
 

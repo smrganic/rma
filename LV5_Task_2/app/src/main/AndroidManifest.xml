@@ -34,15 +34,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LV5_Task_2">
 
-    <provider
-        android:name="androidx.core.content.FileProvider"
-        android:authorities="com.example.lv5_task_2.fileprovider"
-        android:exported="false"
-        android:grantUriPermissions="true">
-        <meta-data
-            android:name="android.support.FILE_PROVIDER_PATHS"
-            android:resource="@xml/file_paths" />
-    </provider>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="${MAPS_API_KEY}" />
@@ -51,8 +42,8 @@
             android:name=".ui.MapsActivity"
             android:label="@string/title_activity_maps">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
+                <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
